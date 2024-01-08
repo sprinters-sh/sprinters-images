@@ -10,15 +10,15 @@ ENV ACTIONS_RUNNER_PRINT_LOG_TO_STDOUT=1
 ENV ImageOS=ubuntu22
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates git curl sudo gnupg lsb-release docker-buildx \
+    && apt-get install -y --no-install-recommends ca-certificates git curl sudo gnupg lsb-release docker-buildx openssl \
     && rm -rf /var/lib/apt/lists/*
 
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && apt-get update \
     && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
 
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash \
+    && apt-get update \
     && apt-get install -y --no-install-recommends git-lfs gh \
     && rm -rf /var/lib/apt/lists/*
 
@@ -40,3 +40,5 @@ RUN ./bin/installdependencies.sh \
     && rm -rf /var/lib/apt/lists/*
 
 USER runner
+
+CMD (sudo dockerd &) && ./config.sh --url https://github.com/$REPO --token $TOKEN --labels $LABELS --ephemeral --disableupdate --unattended && ./run.sh
