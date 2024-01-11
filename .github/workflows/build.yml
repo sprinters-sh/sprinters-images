@@ -31,5 +31,5 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/sprinterssh/sprinter-image:latest
-            ghcr.io/sprinterssh/sprinter-image:${{ github.run_number }}
+            ghcr.io/sprinters-sh/sprinter-image:latest
+            ghcr.io/sprinters-sh/sprinter-image:${{ github.run_number }}
