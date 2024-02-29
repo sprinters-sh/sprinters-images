@@ -2,7 +2,12 @@ FROM ubuntu:22.04
 
 ARG TARGETOS
 ARG TARGETARCH
-ARG RUNNER_VERSION=2.313.0
+ARG RUNNER_VERSION=2.314.1
+
+LABEL org.opencontainers.image.source=https://github.com/sprinters-sh/sprinter-image
+LABEL org.opencontainers.image.description="sprinters.sh runner"
+LABEL org.opencontainers.image.licenses=MIT
+LABEL sh.sprinters.runner.version=$RUNNER_VERSION
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV RUNNER_MANUALLY_TRAP_SIG=1
