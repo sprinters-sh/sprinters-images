@@ -33,3 +33,4 @@ jobs:
           tags: |
             ghcr.io/sprinters-sh/sprinter-image:latest
             ghcr.io/sprinters-sh/sprinter-image:${{ github.run_number }}
+          outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=sprinters.sh runner,annotation-index.org.opencontainers.image.licenses=MIT,annotation-index.org.opencontainers.source=https://github.com/sprinters-sh/sprinter-image
