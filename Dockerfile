@@ -2,7 +2,7 @@ FROM ubuntu:22.04
 
 ARG TARGETOS
 ARG TARGETARCH
-ARG RUNNER_VERSION=2.314.1
+ARG RUNNER_VERSION=2.315.0
 
 LABEL org.opencontainers.image.source=https://github.com/sprinters-sh/sprinter-image
 LABEL org.opencontainers.image.description="sprinters.sh runner"
