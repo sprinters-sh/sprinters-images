@@ -1,0 +1,201 @@
+FROM ubuntu:22.04
+
+ARG TARGETOS
+ARG TARGETARCH
+ARG RUNNER_VERSION=2.316.0
+ARG RUNNER_IMAGE_VERSION=20240422.1
+
+LABEL org.opencontainers.image.source=https://github.com/sprinters-sh/sprinter-image
+LABEL org.opencontainers.image.description="sprinters.sh runner"
+LABEL org.opencontainers.image.licenses=MIT
+LABEL sh.sprinters.runner.version=$RUNNER_VERSION
+LABEL sh.sprinters.runner-image.version=$RUNNER_IMAGE_VERSION
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV RUNNER_MANUALLY_TRAP_SIG=1
+ENV ACTIONS_RUNNER_PRINT_LOG_TO_STDOUT=1
+ENV ImageOS=ubuntu22
+
+# Install base packages required by GitHub's Runner Image scripts
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates git curl wget sudo gnupg lsb-release openssl software-properties-common \
+    && rm -rf /var/lib/apt/lists/*
+
+# Disable systemctl by aliasing it to a dummy echo
+RUN rm /usr/bin/systemctl \
+    && ln -s /usr/bin/echo /usr/bin/systemctl
+
+RUN curl -f -L -o runner-image.tar.gz https://github.com/actions/runner-images/archive/refs/tags/$ImageOS/${RUNNER_IMAGE_VERSION}.tar.gz \
+    && tar xzf ./runner-image.tar.gz \
+    && rm runner-image.tar.gz
+
+ARG PATH_ROOT=/runner-images-$ImageOS-${RUNNER_IMAGE_VERSION}/images/ubuntu/templates
+
+# Fine-tune environment to match GitHub image:
+# 1. Make scripts executable
+# 2. Create missing directories
+RUN chmod +x ${PATH_ROOT}/../scripts/build/*.sh \
+    && mkdir /etc/cloud/templates
+
+ARG IMAGE_FOLDER=/imagegeneration
+RUN mkdir ${IMAGE_FOLDER} && chmod 777 ${IMAGE_FOLDER}
+
+RUN ${PATH_ROOT}/../scripts/build/configure-apt-mock.sh
+
+RUN ${PATH_ROOT}/../scripts/build/install-ms-repos.sh
+RUN ${PATH_ROOT}/../scripts/build/configure-apt-sources.sh
+RUN ${PATH_ROOT}/../scripts/build/configure-apt.sh
+
+RUN ${PATH_ROOT}/../scripts/build/configure-limits.sh
+
+ARG HELPER_SCRIPT_FOLDER=/imagegeneration/helpers
+RUN cp -r ${PATH_ROOT}/../scripts/helpers ${HELPER_SCRIPT_FOLDER}
+
+ARG INSTALLER_SCRIPT_FOLDER=/imagegeneration/installers
+RUN cp -r ${PATH_ROOT}/../scripts/build ${INSTALLER_SCRIPT_FOLDER}
+
+RUN cp -r ${PATH_ROOT}/../assets/post-gen ${IMAGE_FOLDER}
+RUN cp -r ${PATH_ROOT}/../scripts/tests ${IMAGE_FOLDER}
+RUN cp -r ${PATH_ROOT}/../scripts/docs-gen ${IMAGE_FOLDER}
+
+RUN cp -r ${PATH_ROOT}/../../../helpers/software-report-base ${IMAGE_FOLDER}/docs-gen/
+
+RUN cp ${PATH_ROOT}/../toolsets/toolset-2204.json ${INSTALLER_SCRIPT_FOLDER}/toolset.json
+
+RUN mv ${IMAGE_FOLDER}/docs-gen ${IMAGE_FOLDER}/SoftwareReport \
+    && mv ${IMAGE_FOLDER}/post-gen ${IMAGE_FOLDER}/post-generation
+
+ENV IMAGE_VERSION=${RUNNER_IMAGE_VERSION}
+ENV IMAGEDATA_FILE=/imagegeneration/imagedata.json
+RUN ${PATH_ROOT}/../scripts/build/configure-image-data.sh
+
+ENV IMAGE_OS=$ImageOS
+ENV HELPER_SCRIPTS=${HELPER_SCRIPT_FOLDER}
+# Adjust environment for Docker <-> VM differences
+# 1. Create a dummy Azure Linux VM Agent config file
+# 2. Create a dummy MOTD config file
+# 3. Avoid modifying the real /etc/hosts as Docker prohibits this
+RUN touch /etc/waagent.conf \
+    && touch /etc/default/motd-news \
+    && sed -i 's,/etc/hosts,/etc/hosts0,g' ${PATH_ROOT}/../scripts/build/configure-environment.sh \
+    && touch /etc/hosts0 \
+    && ${PATH_ROOT}/../scripts/build/configure-environment.sh
+
+ENV INSTALLER_SCRIPT_FOLDER=${INSTALLER_SCRIPT_FOLDER}
+RUN ${PATH_ROOT}/../scripts/build/install-apt-vital.sh
+
+RUN ${PATH_ROOT}/../scripts/build/install-powershell.sh
+
+RUN pwsh -f ${PATH_ROOT}/../scripts/build/Install-PowerShellModules.ps1
+RUN pwsh -f ${PATH_ROOT}/../scripts/build/Install-PowerShellAzModules.ps1
+
+RUN ${PATH_ROOT}/../scripts/build/install-actions-cache.sh
+RUN ${PATH_ROOT}/../scripts/build/install-runner-package.sh
+RUN ${PATH_ROOT}/../scripts/build/install-apt-common.sh
+RUN ${PATH_ROOT}/../scripts/build/install-azcopy.sh
+RUN ${PATH_ROOT}/../scripts/build/install-azure-cli.sh
+RUN ${PATH_ROOT}/../scripts/build/install-azure-devops-cli.sh
+RUN ${PATH_ROOT}/../scripts/build/install-bicep.sh
+RUN ${PATH_ROOT}/../scripts/build/install-aliyun-cli.sh
+RUN ${PATH_ROOT}/../scripts/build/install-apache.sh
+RUN ${PATH_ROOT}/../scripts/build/install-aws-tools.sh
+RUN ${PATH_ROOT}/../scripts/build/install-clang.sh
+RUN ${PATH_ROOT}/../scripts/build/install-swift.sh
+RUN ${PATH_ROOT}/../scripts/build/install-cmake.sh
+RUN ${PATH_ROOT}/../scripts/build/install-codeql-bundle.sh
+
+# Skip tests due to Docker <-> VM differences
+RUN sed -i 's,invoke_tests,#invoke_tests,g' ${PATH_ROOT}/../scripts/build/install-container-tools.sh \
+    && ${PATH_ROOT}/../scripts/build/install-container-tools.sh
+
+# Make list of extracted sdk archives more specific to prevent accidentally picking up tar.gz files from other tools
+RUN sed -i 's,*.tar.gz,dotnet-*.tar.gz,g' ${PATH_ROOT}/../scripts/build/install-dotnetcore-sdk.sh \
+    && ${PATH_ROOT}/../scripts/build/install-dotnetcore-sdk.sh
+
+RUN ${PATH_ROOT}/../scripts/build/install-firefox.sh
+RUN ${PATH_ROOT}/../scripts/build/install-microsoft-edge.sh
+RUN ${PATH_ROOT}/../scripts/build/install-gcc-compilers.sh
+RUN ${PATH_ROOT}/../scripts/build/install-gfortran.sh
+RUN ${PATH_ROOT}/../scripts/build/install-git.sh
+RUN ${PATH_ROOT}/../scripts/build/install-git-lfs.sh
+RUN ${PATH_ROOT}/../scripts/build/install-github-cli.sh
+RUN ${PATH_ROOT}/../scripts/build/install-google-chrome.sh
+RUN ${PATH_ROOT}/../scripts/build/install-google-cloud-cli.sh
+RUN ${PATH_ROOT}/../scripts/build/install-haskell.sh
+RUN ${PATH_ROOT}/../scripts/build/install-heroku.sh
+RUN ${PATH_ROOT}/../scripts/build/install-java-tools.sh
+RUN ${PATH_ROOT}/../scripts/build/install-kubernetes-tools.sh
+RUN ${PATH_ROOT}/../scripts/build/install-oc-cli.sh
+RUN ${PATH_ROOT}/../scripts/build/install-leiningen.sh
+RUN ${PATH_ROOT}/../scripts/build/install-miniconda.sh
+RUN ${PATH_ROOT}/../scripts/build/install-mono.sh
+RUN ${PATH_ROOT}/../scripts/build/install-kotlin.sh
+
+# Skip tests due to lack of systemd
+RUN sed -i 's,invoke_tests,#invoke_tests,g' ${PATH_ROOT}/../scripts/build/install-mysql.sh \
+    &&  ${PATH_ROOT}/../scripts/build/install-mysql.sh
+
+RUN ${PATH_ROOT}/../scripts/build/install-mssql-tools.sh
+RUN ${PATH_ROOT}/../scripts/build/install-sqlpackage.sh
+RUN ${PATH_ROOT}/../scripts/build/install-nginx.sh
+RUN ${PATH_ROOT}/../scripts/build/install-nvm.sh
+RUN ${PATH_ROOT}/../scripts/build/install-nodejs.sh
+RUN ${PATH_ROOT}/../scripts/build/install-bazel.sh
+RUN ${PATH_ROOT}/../scripts/build/install-oras-cli.sh
+RUN ${PATH_ROOT}/../scripts/build/install-php.sh
+RUN ${PATH_ROOT}/../scripts/build/install-postgresql.sh
+RUN ${PATH_ROOT}/../scripts/build/install-pulumi.sh
+RUN ${PATH_ROOT}/../scripts/build/install-ruby.sh
+RUN ${PATH_ROOT}/../scripts/build/install-rlang.sh
+RUN ${PATH_ROOT}/../scripts/build/install-rust.sh
+RUN ${PATH_ROOT}/../scripts/build/install-julia.sh
+RUN ${PATH_ROOT}/../scripts/build/install-sbt.sh
+RUN ${PATH_ROOT}/../scripts/build/install-selenium.sh
+RUN ${PATH_ROOT}/../scripts/build/install-terraform.sh
+RUN ${PATH_ROOT}/../scripts/build/install-packer.sh
+RUN ${PATH_ROOT}/../scripts/build/install-vcpkg.sh
+RUN ${PATH_ROOT}/../scripts/build/configure-dpkg.sh
+RUN ${PATH_ROOT}/../scripts/build/install-yq.sh
+RUN ${PATH_ROOT}/../scripts/build/install-android-sdk.sh
+RUN ${PATH_ROOT}/../scripts/build/install-pypy.sh
+RUN ${PATH_ROOT}/../scripts/build/install-python.sh
+RUN ${PATH_ROOT}/../scripts/build/install-zstd.sh
+    
+# https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
+#RUN install -m 0755 -d /etc/apt/keyrings \
+#    && curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc \
+#    && chmod a+r /etc/apt/keyrings/docker.asc \
+#    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
+#    && apt-get update \
+#    && apt-get install -y --no-install-recommends docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
+#    && rm -rf /var/lib/apt/lists/*
+#
+#RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+#    && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+#    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+#
+#RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash \
+#    && apt-get update \
+#    && apt-get install -y --no-install-recommends git-lfs gh \
+#    && rm -rf /var/lib/apt/lists/*
+#
+#RUN adduser --disabled-password --gecos "" --uid 1001 runner \
+#    && usermod -aG sudo runner \
+#    && usermod -aG docker runner \
+#    && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
+#    && echo "Defaults env_keep += \"DEBIAN_FRONTEND\"" >> /etc/sudoers
+#
+#WORKDIR /home/runner
+#
+#RUN export RUNNER_ARCH=${TARGETARCH} \
+#    && if [ "$RUNNER_ARCH" = "amd64" ]; then export RUNNER_ARCH=x64 ; fi \
+#    && curl -f -L -o runner.tar.gz https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-${TARGETOS}-${RUNNER_ARCH}-${RUNNER_VERSION}.tar.gz \
+#    && tar xzf ./runner.tar.gz \
+#    && rm runner.tar.gz
+#
+#RUN ./bin/installdependencies.sh \
+#    && rm -rf /var/lib/apt/lists/*
+#
+#USER runner
+#
+#CMD (sudo dockerd &) && ./config.sh --url https://github.com/$REPO --token $TOKEN --labels $LABELS --ephemeral --disableupdate --unattended && ./run.sh
