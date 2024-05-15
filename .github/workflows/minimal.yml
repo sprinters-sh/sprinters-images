@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       runner_version:
-        description: 'Runner Version'
+        description: 'Runner Version (example: 2.316.1)'
         required: true
         type: string
 
@@ -32,8 +32,7 @@ jobs:
         with:
           context: .
           file: Dockerfile-minimal
-          build-args:
-            RUNNER_VERSION: ${{ inputs.runner_version }}
+          build-args: RUNNER_VERSION=${{ inputs.runner_version }}
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
