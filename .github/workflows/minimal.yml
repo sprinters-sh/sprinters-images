@@ -1,4 +1,4 @@
-name: build
+name: minimal
 
 on:
   workflow_dispatch:
