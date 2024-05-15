@@ -1,9 +1,12 @@
 name: build
 
 on:
-  push:
-    branches:
-      - 'main'
+  workflow_dispatch:
+    inputs:
+      runner_version:
+        description: 'Runner Version'
+        required: true
+        type: string
 
 jobs:
   docker:
@@ -29,9 +32,11 @@ jobs:
         with:
           context: .
           file: Dockerfile-minimal
+          build-args:
+            RUNNER_VERSION: ${{ inputs.runner_version }}
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/sprinters-sh/sprinter-image:latest
-            ghcr.io/sprinters-sh/sprinter-image:${{ github.run_number }}
+            ghcr.io/sprinters-sh/sprinters-image-minimal:latest
+            ghcr.io/sprinters-sh/sprinters-image-minimal:${{ inputs.runner_version }}
           outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=sprinters.sh runner,annotation-index.org.opencontainers.image.licenses=MIT,annotation-index.org.opencontainers.source=https://github.com/sprinters-sh/sprinter-image
