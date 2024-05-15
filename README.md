@@ -1,5 +1,10 @@
 # sprinter-image
-Sprinter Docker image
+Sprinters Docker images
+
+## Variants
+- `minimal` (x64)
+- `minimal` (arm64)
+- `full-ubuntu22` (x64)
 
 ## License
 MIT License

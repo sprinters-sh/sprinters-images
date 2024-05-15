@@ -1,1 +1,1 @@
-docker build -t sprinter-image:dev-minimal -f Dockerfile-minimal .
+docker build -t sprinter-image-minimal:dev -f Dockerfile-minimal .

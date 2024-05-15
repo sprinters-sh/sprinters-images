@@ -1,4 +1,4 @@
-name: minimal
+name: full-ubuntu22
 
 on:
   workflow_dispatch:
@@ -31,7 +31,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: Dockerfile-minimal
+          file: Dockerfile-full-ubuntu22
           build-args: RUNNER_IMAGE_VERSION=${{ inputs.runner_image_version }}
           platforms: linux/amd64
           push: true
