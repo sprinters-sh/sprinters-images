@@ -10,7 +10,7 @@ on:
 
 jobs:
   docker:
-    runs-on: sprinters:aws/us-east-1/m7i-flex.4xlarge/temp=256
+    runs-on: sprinters:aws/us-east-1/m7i.4xlarge
     steps:
       - uses: actions/checkout@v3
 
