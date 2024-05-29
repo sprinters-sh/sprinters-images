@@ -9,6 +9,9 @@ ENV RUNNER_MANUALLY_TRAP_SIG=1
 ENV ACTIONS_RUNNER_PRINT_LOG_TO_STDOUT=1
 ENV ImageOS=ubuntu22
 
+# Print free disk space
+RUN df
+
 # Install base packages required by GitHub's Runner Image scripts
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates git curl wget sudo gnupg lsb-release openssl software-properties-common apt-utils snap \
