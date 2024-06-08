@@ -2,7 +2,7 @@ FROM ubuntu:22.04 AS build
 
 ARG TARGETOS
 ARG TARGETARCH
-ARG RUNNER_IMAGE_VERSION=20240422.1
+ARG RUNNER_IMAGE_VERSION=20240603.1
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV RUNNER_MANUALLY_TRAP_SIG=1
@@ -45,6 +45,10 @@ RUN curl -f -L -o runner-image.tar.gz https://github.com/actions/runner-images/a
 ARG PATH_ROOT=runner-images-$ImageOS-${RUNNER_IMAGE_VERSION}/images/ubuntu/templates
 RUN chmod +x ${PATH_ROOT}/../scripts/build/*.sh
 
+ARG HELPER_SCRIPT_FOLDER=/imagegeneration/helpers
+ENV HELPER_SCRIPTS=${HELPER_SCRIPT_FOLDER}
+RUN cp -r ${PATH_ROOT}/../scripts/helpers ${HELPER_SCRIPT_FOLDER}
+
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/configure-apt-mock.sh
 
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-ms-repos.sh
@@ -52,9 +56,6 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/configure-apt-sources.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/configure-apt.sh
 
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/configure-limits.sh
-
-ARG HELPER_SCRIPT_FOLDER=/imagegeneration/helpers
-RUN cp -r ${PATH_ROOT}/../scripts/helpers ${HELPER_SCRIPT_FOLDER}
 
 ARG INSTALLER_SCRIPT_FOLDER=/imagegeneration/installers
 RUN cp -r ${PATH_ROOT}/../scripts/build ${INSTALLER_SCRIPT_FOLDER}
@@ -75,7 +76,6 @@ ENV IMAGEDATA_FILE=/imagegeneration/imagedata.json
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/configure-image-data.sh
 
 ENV IMAGE_OS=$ImageOS
-ENV HELPER_SCRIPTS=${HELPER_SCRIPT_FOLDER}
 # Adjust environment for Docker <-> VM differences
 # 1. Create a dummy Azure Linux VM Agent config file
 # 2. Create a dummy MOTD config file
