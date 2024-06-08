@@ -183,9 +183,8 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-zstd.sh
 
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-docker-compose.sh
 
-# Skip socket chgrp due to lack of systemd and prevent Docker startup due to Docker <-> VM differences
-RUN sed -i 's,chgrp,#chgrp,g' ${PATH_ROOT}/../scripts/build/install-docker.sh \
-    && sed -i 's,docker info,#docker info,g' ${PATH_ROOT}/../scripts/build/install-docker.sh \
+# Prevent Docker startup due to Docker <-> VM differences
+RUN sed -i 's,docker info,#docker info,g' ${PATH_ROOT}/../scripts/build/install-docker.sh \
     && DOCKERHUB_PULL_IMAGES=no sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-docker.sh
 
 # Add runner user to Docker Group

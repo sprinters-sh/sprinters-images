@@ -4,7 +4,7 @@ Sprinters Docker images
 ## Variants
 - `minimal` (x64)
 - `minimal` (arm64)
-- `full-ubuntu22` (x64)
+- `ubuntu-22.04` (x64)
 
 ## License
 MIT License

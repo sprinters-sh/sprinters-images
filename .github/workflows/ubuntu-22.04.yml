@@ -1,10 +1,10 @@
-name: full-ubuntu22
+name: ubuntu-22.04
 
 on:
   workflow_dispatch:
     inputs:
       runner_image_version:
-        description: 'Runner Image Version (example: 20240422.1)'
+        description: 'Ubuntu 22.04 Runner Image Version (example: 20240422.1)'
         required: true
         type: string
 
@@ -31,11 +31,11 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: Dockerfile-full-ubuntu22
+          file: Dockerfile-ubuntu-22.04
           build-args: RUNNER_IMAGE_VERSION=${{ inputs.runner_image_version }}
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/sprinters-sh/sprinters-image-full-ubuntu22:latest
-            ghcr.io/sprinters-sh/sprinters-image-full-ubuntu22:${{ inputs.runner_image_version }}
+            ghcr.io/sprinters-sh/sprinters-image-ubuntu-22.04:latest
+            ghcr.io/sprinters-sh/sprinters-image-ubuntu-22.04:${{ inputs.runner_image_version }}
           outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=sprinters.sh runner,annotation-index.org.opencontainers.image.licenses=MIT,annotation-index.org.opencontainers.source=https://github.com/sprinters-sh/sprinter-image
