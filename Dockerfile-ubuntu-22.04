@@ -217,6 +217,10 @@ RUN cp ${PATH_ROOT}/../assets/ubuntu2204.conf /tmp/
 RUN sudo -E sh -c "mkdir -p /etc/vsts"
 RUN sudo -E sh -c "cp /tmp/ubuntu2204.conf /etc/vsts/machine_instance.conf"
 
+# Extract runner to get it ready to use
+RUN sudo -E tar xzf /opt/runner-cache/actions-runner-linux-*.tar.gz -C /home/runner \
+    && sudo -E sh -c "rm -Rf /opt/runner-cache"
+
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/cleanup.sh
 
 RUN sudo -E sh -c "rm -Rf ${PATH_ROOT}"

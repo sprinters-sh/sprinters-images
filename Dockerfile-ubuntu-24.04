@@ -176,8 +176,6 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-homebrew.sh
 RUN sed -i 's,snap set,#snap set,g' ${PATH_ROOT}/../scripts/build/configure-snap.sh \
     && sudo -E sh -c ${PATH_ROOT}/../scripts/build/configure-snap.sh
 
-RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/cleanup.sh
-
 # Skip due to Docker <-> VM differences
 # echo 'Reboot VM
 # sudo reboot
@@ -188,6 +186,12 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/cleanup.sh
 
 RUN sed -i 's,sed -i,echo disabled #sed -i,g' ${PATH_ROOT}/../scripts/build/configure-system.sh \
     && sudo -E sh -c ${PATH_ROOT}/../scripts/build/configure-system.sh
+
+# Extract runner to get it ready to use
+RUN sudo -E tar xzf /opt/runner-cache/actions-runner-linux-*.tar.gz -C /home/runner \
+    && sudo -E sh -c "rm -Rf /opt/runner-cache"
+
+RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/cleanup.sh
 
 ENV HISTSIZE=0
 
