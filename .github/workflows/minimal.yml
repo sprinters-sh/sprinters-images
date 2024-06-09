@@ -39,4 +39,3 @@ jobs:
           tags: |
             ghcr.io/sprinters-sh/sprinters-images-minimal:latest
             ghcr.io/sprinters-sh/sprinters-images-minimal:${{ inputs.runner_version }}
-          outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=sprinters.sh runner,annotation-index.org.opencontainers.image.licenses=MIT,annotation-index.org.opencontainers.source=https://github.com/sprinters-sh/sprinters-images
