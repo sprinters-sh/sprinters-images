@@ -1,4 +1,4 @@
-# sprinter-image
+# sprinters-images
 Sprinters Docker images
 
 ## Variants

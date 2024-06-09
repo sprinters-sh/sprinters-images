@@ -37,5 +37,5 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/sprinters-sh/sprinters-image-ubuntu-24.04:latest
-            ghcr.io/sprinters-sh/sprinters-image-ubuntu-24.04:${{ inputs.runner_image_version }}
+            ghcr.io/sprinters-sh/sprinters-images-ubuntu-24.04:latest
+            ghcr.io/sprinters-sh/sprinters-images-ubuntu-24.04:${{ inputs.runner_image_version }}
