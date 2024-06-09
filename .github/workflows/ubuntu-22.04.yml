@@ -9,7 +9,7 @@ on:
         type: string
 
 jobs:
-  docker:
+  build-docker-image:
     runs-on: sprinters:aws/us-east-1/m7i.8xlarge/temp=1024
     steps:
       - uses: actions/checkout@v4

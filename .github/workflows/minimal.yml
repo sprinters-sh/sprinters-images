@@ -9,7 +9,7 @@ on:
         type: string
 
 jobs:
-  docker:
+  build-docker-image:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
