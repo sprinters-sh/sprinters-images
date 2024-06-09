@@ -186,7 +186,8 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/cleanup.sh
 # pwsh -File ${IMAGE_FOLDER}/SoftwareReport/Generate-SoftwareReport.ps1 -OutputDirectory ${IMAGE_FOLDER}
 # pwsh -File ${IMAGE_FOLDER}/tests/RunAll-Tests.ps1 -OutputDirectory ${IMAGE_FOLDER}
 
-RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/configure-system.sh
+RUN sed -i 's,sed -i,echo disabled #sed -i,g' ${PATH_ROOT}/../scripts/build/configure-system.sh \
+    && sudo -E sh -c ${PATH_ROOT}/../scripts/build/configure-system.sh
 
 ENV HISTSIZE=0
 
