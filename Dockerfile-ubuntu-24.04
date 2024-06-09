@@ -176,6 +176,8 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-homebrew.sh
 RUN sed -i 's,snap set,#snap set,g' ${PATH_ROOT}/../scripts/build/configure-snap.sh \
     && sudo -E sh -c ${PATH_ROOT}/../scripts/build/configure-snap.sh
 
+RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/cleanup.sh
+
 # Skip due to Docker <-> VM differences
 # echo 'Reboot VM
 # sudo reboot
@@ -199,7 +201,7 @@ ENV RUNNER_MANUALLY_TRAP_SIG=1
 ENV ACTIONS_RUNNER_PRINT_LOG_TO_STDOUT=1
 ENV ImageOS=ubuntu24
 
-LABEL org.opencontainers.image.source=https://github.com/sprinters-sh/sprinter-image
+LABEL org.opencontainers.image.source=https://github.com/sprinters-sh/sprinters-images
 LABEL org.opencontainers.image.description="sprinters.sh runner"
 LABEL org.opencontainers.image.licenses=MIT
 LABEL sh.sprinters.runner-image.version=$RUNNER_IMAGE_VERSION

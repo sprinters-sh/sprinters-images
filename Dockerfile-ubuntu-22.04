@@ -234,7 +234,7 @@ ENV RUNNER_MANUALLY_TRAP_SIG=1
 ENV ACTIONS_RUNNER_PRINT_LOG_TO_STDOUT=1
 ENV ImageOS=ubuntu22
 
-LABEL org.opencontainers.image.source=https://github.com/sprinters-sh/sprinter-image
+LABEL org.opencontainers.image.source=https://github.com/sprinters-sh/sprinters-images
 LABEL org.opencontainers.image.description="sprinters.sh runner"
 LABEL org.opencontainers.image.licenses=MIT
 LABEL sh.sprinters.runner-image.version=$RUNNER_IMAGE_VERSION
