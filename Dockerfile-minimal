@@ -1,4 +1,4 @@
-FROM ubuntu:24.04
+FROM ubuntu:22.04
 
 ARG TARGETOS
 ARG TARGETARCH
@@ -50,9 +50,13 @@ RUN export RUNNER_ARCH=${TARGETARCH} \
     && tar xzf ./runner.tar.gz \
     && rm runner.tar.gz
 
-RUN ./bin/installdependencies.sh \
+RUN apt-get update \
+    && ./bin/installdependencies.sh \
     && rm -rf /var/lib/apt/lists/*
 
 USER runner
+
+# Quick sanity check ensuring the runner is fully functional
+RUN ./config.sh --version
 
 CMD (sudo dockerd &) && ./config.sh --url https://github.com/$REPO --token $TOKEN --labels $LABELS --ephemeral --disableupdate --unattended && ./run.sh
