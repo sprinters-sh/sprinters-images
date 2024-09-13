@@ -2,7 +2,7 @@ FROM ubuntu:24.04 AS build
 
 ARG TARGETOS
 ARG TARGETARCH
-ARG RUNNER_IMAGE_VERSION=20240604.1
+ARG RUNNER_IMAGE_VERSION=20240908.1
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV RUNNER_MANUALLY_TRAP_SIG=1
@@ -149,6 +149,7 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-ruby.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-rust.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-julia.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-selenium.sh
+RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-packer.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-vcpkg.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/configure-dpkg.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-yq.sh
