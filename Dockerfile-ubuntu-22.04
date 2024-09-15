@@ -181,8 +181,6 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-pypy.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-python.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-zstd.sh
 
-RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-docker-compose.sh
-
 # Prevent Docker startup and skip tests due to Docker <-> VM differences
 RUN sed -i 's,docker info,#docker info,g' ${PATH_ROOT}/../scripts/build/install-docker.sh \
     && sed -i 's,invoke_tests,echo Skipping tests #invoke_tests,g' ${PATH_ROOT}/../scripts/build/install-docker.sh \
