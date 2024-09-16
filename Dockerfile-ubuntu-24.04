@@ -104,6 +104,7 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-bicep.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-apache.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-aws-tools.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-clang.sh
+RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-swift.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-cmake.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-codeql-bundle.sh
 
@@ -116,7 +117,9 @@ RUN sed -i 's,*.tar.gz,dotnet-*.tar.gz,g' ${PATH_ROOT}/../scripts/build/install-
     && sudo mkdir -p /usr/share/dotnet/shared \
     && sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-dotnetcore-sdk.sh
 
+RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-microsoft-edge.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-gcc-compilers.sh
+RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-firefox.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-gfortran.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-git.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-git-lfs.sh
@@ -126,6 +129,7 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-haskell.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-java-tools.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-kubernetes-tools.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-miniconda.sh
+RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-kotlin.sh
 
 # Skip tests due to lack of systemd
 RUN sed -i 's,invoke_tests,#invoke_tests,g' ${PATH_ROOT}/../scripts/build/install-mysql.sh \
