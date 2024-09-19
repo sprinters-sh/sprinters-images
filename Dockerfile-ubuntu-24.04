@@ -104,7 +104,10 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-bicep.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-apache.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-aws-tools.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-clang.sh
-RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-swift.sh
+
+# Disabled Swift install until it is fixed for Swift 6.0 upstream
+# RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-swift.sh
+
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-cmake.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-codeql-bundle.sh
 
