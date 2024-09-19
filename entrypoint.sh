@@ -12,14 +12,14 @@ wait_for_message_and_background() {
 
     echo "Starting '$process_command' ..."
 
+    # Precreate log file and ensure it exists with readable permissions
+    touch $log
+
     # Start the process in the background
     $process_command > >(tee $log) 2>&1 &
 
     # Capture the PID of the process
     local pid=$!
-
-    # Ensure we can read the log even if the process_command included sudo
-    chmod +r $log
 
     # Use tail -f to monitor the output and look for the specific message
     tail -f $log | while read -r line; do
