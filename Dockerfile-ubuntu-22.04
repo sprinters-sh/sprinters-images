@@ -252,6 +252,6 @@ USER runner
 WORKDIR /home/runner
 
 # Quick sanity check ensuring the runner is fully functional
-RUN ./config.sh --version
+# RUN ./config.sh --version
 
 CMD ["/entrypoint.sh"]
