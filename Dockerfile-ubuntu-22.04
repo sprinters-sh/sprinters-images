@@ -225,6 +225,8 @@ RUN sudo -E sh -c "rm -Rf ${PATH_ROOT}"
 RUN sudo -E sh -c "rm -Rf /tmp/*"
 ENV HISTSIZE=0
 
+COPY --chmod=555 entrypoint.sh /entrypoint.sh
+
 FROM scratch AS image
 
 ARG TARGETOS
@@ -246,4 +248,7 @@ COPY --from=build / /
 USER runner
 WORKDIR /home/runner
 
-CMD (sudo dockerd &) && ./config.sh --url https://github.com/$REPO --token $TOKEN --labels $LABELS --ephemeral --disableupdate --unattended && ./run.sh
+# Quick sanity check ensuring the runner is fully functional
+RUN ./config.sh --version
+
+CMD ["/entrypoint.sh"]

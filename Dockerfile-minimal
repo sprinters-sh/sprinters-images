@@ -54,9 +54,11 @@ RUN apt-get update \
     && ./bin/installdependencies.sh \
     && rm -rf /var/lib/apt/lists/*
 
+COPY --chmod=555 entrypoint.sh /entrypoint.sh
+
 USER runner
 
 # Quick sanity check ensuring the runner is fully functional
 RUN ./config.sh --version
 
-CMD (sudo dockerd &) && ./config.sh --url https://github.com/$REPO --token $TOKEN --labels $LABELS --ephemeral --disableupdate --unattended && ./run.sh
+CMD ["/entrypoint.sh"]
