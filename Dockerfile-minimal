@@ -15,7 +15,7 @@ ENV ACTIONS_RUNNER_PRINT_LOG_TO_STDOUT=1
 ENV ImageOS=ubuntu22
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates git curl sudo gnupg lsb-release openssl \
+    && apt-get install -y --no-install-recommends ca-certificates git curl sudo gnupg lsb-release openssl unzip \
     && rm -rf /var/lib/apt/lists/*
 
 # https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
