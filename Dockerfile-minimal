@@ -2,7 +2,7 @@ FROM ubuntu:22.04
 
 ARG TARGETOS
 ARG TARGETARCH
-ARG RUNNER_VERSION=2.319.1
+ARG RUNNER_VERSION=2.320.0
 
 LABEL org.opencontainers.image.source=https://github.com/sprinters-sh/sprinter-image
 LABEL org.opencontainers.image.description="sprinters.sh runner"
@@ -59,6 +59,7 @@ COPY --chmod=555 entrypoint.sh /entrypoint.sh
 USER runner
 
 # Quick sanity check ensuring the runner is fully functional
+# Currently fails for ubuntu:24.04 with "Libicu's dependencies is missing for Dotnet Core 6.0"
 RUN ./config.sh --version
 
 CMD ["/entrypoint.sh"]
