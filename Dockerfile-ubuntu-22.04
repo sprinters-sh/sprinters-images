@@ -24,7 +24,7 @@ RUN rm /usr/bin/systemctl \
     && ln -s /usr/bin/echo /usr/bin/journalctl
 
 # Fine-tune environment to match GitHub image
-RUN mkdir /etc/cloud/templates
+RUN mkdir /etc/cloud/templates && touch /.dockerenv
 
 ARG IMAGE_FOLDER=/imagegeneration
 RUN mkdir ${IMAGE_FOLDER} && chmod 777 ${IMAGE_FOLDER}
