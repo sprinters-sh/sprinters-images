@@ -15,6 +15,7 @@ run_quiet() {
 }
 
 if [ -n "${DOCKERD_ASYNC}" ]; then
+    timestamp "Starting dockerd async ..."
     sudo dockerd &
 else
     # Start a process and wait for a specific message
@@ -57,7 +58,7 @@ else
     wait_for_message_and_background "dockerd.log" "sudo dockerd -D --containerd /run/containerd/containerd.sock" "API listen on /var/run/docker.sock" "exit status\|failed to start containerd"
 fi
 
-if [ -n "${JIT_CONFIG}" ]; then
+if [ -n "${JITCONFIG}" ]; then
     timestamp "Launching Runner with JIT config ..."
     run_quiet ./run.sh --jitconfig "$JITCONFIG"
 else
