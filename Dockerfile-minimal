@@ -13,6 +13,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV RUNNER_MANUALLY_TRAP_SIG=1
 ENV ACTIONS_RUNNER_PRINT_LOG_TO_STDOUT=1
 ENV ImageOS=ubuntu22
+ENV ACTIONS_RUNNER_HOOK_JOB_STARTED=/job-started.sh
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates git curl sudo gnupg lsb-release openssl unzip \
@@ -55,6 +56,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --chmod=555 entrypoint.sh /entrypoint.sh
+COPY --chmod=555 job-started.sh /job-started.sh
 
 USER runner
 

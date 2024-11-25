@@ -205,6 +205,7 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/cleanup.sh
 ENV HISTSIZE=0
 
 COPY --chmod=555 entrypoint.sh /entrypoint.sh
+COPY --chmod=555 job-started.sh /job-started.sh
 
 FROM scratch AS image
 
@@ -216,6 +217,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV RUNNER_MANUALLY_TRAP_SIG=1
 ENV ACTIONS_RUNNER_PRINT_LOG_TO_STDOUT=1
 ENV ImageOS=ubuntu24
+ENV ACTIONS_RUNNER_HOOK_JOB_STARTED=/job-started.sh
 
 LABEL org.opencontainers.image.source=https://github.com/sprinters-sh/sprinters-images
 LABEL org.opencontainers.image.description="sprinters.sh runner"
