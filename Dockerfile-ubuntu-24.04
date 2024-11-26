@@ -2,7 +2,7 @@ FROM ubuntu:24.04 AS build
 
 ARG TARGETOS
 ARG TARGETARCH
-ARG RUNNER_IMAGE_VERSION=20241117.1
+ARG RUNNER_IMAGE_VERSION=20241124.1
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV RUNNER_MANUALLY_TRAP_SIG=1
@@ -205,6 +205,7 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/cleanup.sh
 ENV HISTSIZE=0
 
 COPY --chmod=555 entrypoint.sh /entrypoint.sh
+COPY --chmod=555 start-docker.sh /start-docker.sh
 COPY --chmod=555 job-started.sh /job-started.sh
 
 FROM scratch AS image

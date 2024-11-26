@@ -56,6 +56,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --chmod=555 entrypoint.sh /entrypoint.sh
+COPY --chmod=555 start-docker.sh /start-docker.sh
 COPY --chmod=555 job-started.sh /job-started.sh
 
 USER runner
