@@ -21,16 +21,5 @@ else
     /start-docker.sh
 fi
 
-if [ -n "${JITCONFIG}" ]; then
-    timestamp "Launching Runner with JIT config ..."
-    run_quiet ./run.sh --jitconfig "$JITCONFIG"
-else
-    timestamp "Configuring Runner ..."
-    (run_quiet ./config.sh --url https://github.com/$REPO \
-               --token $TOKEN \
-               --labels $LABELS \
-               --ephemeral --disableupdate --unattended) || exit 1
-
-    timestamp "Launching Runner ..."
-    run_quiet ./run.sh
-fi
+timestamp "Launching Runner with JIT config ..."
+run_quiet ./run.sh --jitconfig "$JITCONFIG"
