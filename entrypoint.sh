@@ -14,12 +14,8 @@ run_quiet() {
     fi
 }
 
-if [ -n "${DOCKERD_ASYNC}" ]; then
-    timestamp "Starting dockerd async ..."
-    /start-docker.sh &
-else
-    /start-docker.sh
-fi
+timestamp "Starting dockerd async ..."
+/start-docker.sh &
 
 timestamp "Launching Runner with JIT config ..."
 run_quiet ./run.sh --jitconfig "$JITCONFIG"
