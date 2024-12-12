@@ -7,7 +7,7 @@ on:
         description: 'Ubuntu 22.04 Runner Image Version'
         required: false
         type: string
-        default: "20241201.1"
+        default: "20241211.1"
 
 jobs:
   build-docker-image:
