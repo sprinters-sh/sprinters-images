@@ -11,7 +11,7 @@ on:
 
 jobs:
   build-docker-image:
-    runs-on: sprinters:aws:m7i.8xlarge:temp=1024
+    runs-on: sprinters:aws/846680362832:m7i.8xlarge:temp=1024
     steps:
       - uses: actions/checkout@v4
 
