@@ -7,11 +7,11 @@ on:
         description: 'Ubuntu 22.04 Runner Image Version'
         required: false
         type: string
-        default: "20241215.1"
+        default: "20250105.1"
 
 jobs:
   build-docker-image:
-    runs-on: sprinters:aws/846680362832:m7i.8xlarge:temp=1024
+    runs-on: sprinters:aws/846680362832:m7i-flex.8xlarge:temp=1024
     steps:
       - uses: actions/checkout@v4
 
