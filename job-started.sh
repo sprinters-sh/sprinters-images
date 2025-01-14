@@ -5,13 +5,14 @@ timestamp() {
     echo "$(date -u -Iseconds | tr 'T' ' ' | cut -d'+' -f1)" "$@"
 }
 
-timestamp "===> BEGIN Job Started Hook"
+timestamp "===> Job Starting..."
 
 until docker info >/dev/null 2>&1; do
     timestamp "Waiting for Docker daemon to be ready..."
     sleep 1
 done
-
 timestamp "Docker daemon is ready!"
 
-timestamp "===> END Job Started Hook"
+timestamp "Instance: $(hostname)"
+
+timestamp "===> Job Started."

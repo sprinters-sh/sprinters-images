@@ -2,7 +2,7 @@ FROM ubuntu:24.04 AS build
 
 ARG TARGETOS
 ARG TARGETARCH
-ARG RUNNER_IMAGE_VERSION=20250105.1
+ARG RUNNER_IMAGE_VERSION=20250113.1
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV RUNNER_MANUALLY_TRAP_SIG=1
@@ -101,10 +101,7 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-bicep.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-apache.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-aws-tools.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-clang.sh
-
-# Disabled Swift install until it is fixed for Swift 6.0 upstream
-# RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-swift.sh
-
+RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-swift.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-cmake.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-codeql-bundle.sh
 
