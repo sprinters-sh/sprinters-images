@@ -7,7 +7,7 @@ on:
         description: 'Runner Version'
         required: false
         type: string
-        default: "2.321.0"
+        default: "2.322.0"
 
 jobs:
   build-docker-image:
