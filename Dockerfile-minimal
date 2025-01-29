@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 ARG TARGETOS
 ARG TARGETARCH
@@ -52,6 +52,7 @@ RUN export RUNNER_ARCH=${TARGETARCH} \
     && rm runner.tar.gz
 
 RUN apt-get update \
+    && apt-get install -y --no-install-recommends libicu-dev \
     && ./bin/installdependencies.sh \
     && rm -rf /var/lib/apt/lists/*
 
@@ -62,7 +63,6 @@ COPY --chmod=555 job-started.sh /job-started.sh
 USER runner
 
 # Quick sanity check ensuring the runner is fully functional
-# Currently fails for ubuntu:24.04 with "Libicu's dependencies is missing for Dotnet Core 6.0"
 RUN ./config.sh --version
 
 CMD ["/entrypoint.sh"]
