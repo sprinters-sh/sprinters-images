@@ -149,11 +149,19 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-gfortran.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-git.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-git-lfs.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-github-cli.sh
+
+# Not in arm images
 # RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-google-chrome.sh
+
+# Not in arm images
 # RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-haskell.sh
+
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-java-tools.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-kubernetes-tools.sh
+
+# Not in arm images
 # RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-miniconda.sh
+
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-kotlin.sh
 
 # Skip tests due to lack of systemd
@@ -183,7 +191,11 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-rust.sh
 
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-selenium.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-packer.sh
-RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-vcpkg.sh
+
+# Not yet available as binary for Linux arm64
+# https://github.com/microsoft/vcpkg/blob/master/scripts/bootstrap.sh#L186
+# RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-vcpkg.sh
+
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/configure-dpkg.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-yq.sh
 
