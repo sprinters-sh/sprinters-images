@@ -202,7 +202,10 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-yq.sh
 # Not in arm images
 # RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-android-sdk.sh
 
-RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-pypy.sh
+# Fix arm64 arch name
+RUN sed -i 's,arm64,aarch64,g' ${PATH_ROOT}/../scripts/build/install-pypy.sh \
+    && sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-pypy.sh
+
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-python.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-zstd.sh
 
