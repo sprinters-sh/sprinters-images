@@ -112,7 +112,11 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-azure-devops-cli.sh
 # RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-bicep.sh
 
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-apache.sh
-RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-aws-tools.sh
+
+# Fix arm64 arch name
+RUN sed -i 's,arm64,aarch64,g' ${PATH_ROOT}/../scripts/build/install-aws-tools.sh \
+  && sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-aws-tools.sh
+
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-clang.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-swift.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-cmake.sh
