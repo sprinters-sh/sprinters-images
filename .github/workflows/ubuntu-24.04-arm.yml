@@ -1,17 +1,14 @@
 name: ubuntu-24.04-arm
 
 on:
-  workflow_dispatch:
-    inputs:
-      runner_image_version:
-        description: 'Ubuntu 24.04 arm64 Runner Image Version'
-        required: false
-        type: string
-        default: "20250202.1"
+  workflow_dispatch
 
 jobs:
   build-docker-image:
     runs-on: sprinters:aws/846680362832:m8g.8xlarge:minimal:temp=1024
+    env:
+      DOCKERFILE_NAME: Dockerfile-ubuntu-24.04-arm
+
     steps:
       - uses: actions/checkout@v4
 
@@ -28,14 +25,19 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Extract version from Dockerfile
+        run: |
+          VERSION=$(grep 'ARG RUNNER_IMAGE_VERSION=' "$DOCKERFILE_NAME" | cut -d '=' -f2)
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: Dockerfile-ubuntu-24.04-arm
-          build-args: RUNNER_IMAGE_VERSION=${{ inputs.runner_image_version }}
+          file: ${{ env.DOCKERFILE_NAME }}
+          build-args: RUNNER_IMAGE_VERSION=${{ env.VERSION }}
           platforms: linux/arm64
           push: true
           tags: |
             ghcr.io/sprinters-sh/sprinters-images-ubuntu-24.04-arm:latest
-            ghcr.io/sprinters-sh/sprinters-images-ubuntu-24.04-arm:${{ inputs.runner_image_version }}
+            ghcr.io/sprinters-sh/sprinters-images-ubuntu-24.04-arm:${{ env.VERSION }}
