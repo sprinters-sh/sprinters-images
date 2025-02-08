@@ -114,7 +114,7 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-azure-devops-cli.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-apache.sh
 
 # Fix arm64 arch name
-RUN sed -i 's,arm64,aarch64,g' ${PATH_ROOT}/../scripts/build/install-aws-tools.sh \
+RUN sed -i 's,awscli-exe-linux-arm64,awscli-exe-linux-aarch64,g' ${PATH_ROOT}/../scripts/build/install-aws-tools.sh \
   && sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-aws-tools.sh
 
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-clang.sh
