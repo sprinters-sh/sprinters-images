@@ -1,3 +1,4 @@
+# https://github.com/actions/partner-runner-images/blob/main/images/arm-ubuntu-24-image.md
 FROM ubuntu:24.04 AS build
 
 ARG TARGETOS
