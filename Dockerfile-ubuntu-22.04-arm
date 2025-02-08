@@ -120,7 +120,7 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-apache.sh
 
 # Fix arm64 arch name
 RUN sed -i 's,awscli-exe-linux-arm64,awscli-exe-linux-aarch64,g' ${PATH_ROOT}/../scripts/build/install-aws-tools.sh \
-  && RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-aws-tools.sh
+  && sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-aws-tools.sh
 
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-clang.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-swift.sh
