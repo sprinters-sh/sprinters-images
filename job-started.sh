@@ -5,7 +5,7 @@ timestamp() {
     echo "$(date -u -Iseconds | tr 'T' ' ' | cut -d'+' -f1)" "$@"
 }
 
-timestamp "===> Job Starting..."
+timestamp "===> Sprinters Job Starting..."
 
 until docker info >/dev/null 2>&1; do
     timestamp "Waiting for Docker daemon to be ready..."
@@ -15,4 +15,4 @@ timestamp "Docker daemon is ready!"
 
 timestamp "Instance: $(hostname)"
 
-timestamp "===> Job Started."
+timestamp "===> Sprinters Job Started."

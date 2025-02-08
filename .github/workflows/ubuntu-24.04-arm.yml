@@ -4,14 +4,14 @@ on:
   workflow_dispatch:
     inputs:
       runner_image_version:
-        description: 'Ubuntu 24.04 x64 Runner Image Version'
+        description: 'Ubuntu 24.04 arm64 Runner Image Version'
         required: false
         type: string
         default: "20250202.1"
 
 jobs:
   build-docker-image:
-    runs-on: sprinters:aws/846680362832:m7i-flex.8xlarge:temp=1024
+    runs-on: sprinters:aws/846680362832:m8g.8xlarge:minimal:temp=1024
     steps:
       - uses: actions/checkout@v4
 
@@ -32,10 +32,10 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: Dockerfile-ubuntu-24.04
+          file: Dockerfile-ubuntu-24.04-arm
           build-args: RUNNER_IMAGE_VERSION=${{ inputs.runner_image_version }}
-          platforms: linux/amd64
+          platforms: linux/arm64
           push: true
           tags: |
-            ghcr.io/sprinters-sh/sprinters-images-ubuntu-24.04:latest
-            ghcr.io/sprinters-sh/sprinters-images-ubuntu-24.04:${{ inputs.runner_image_version }}
+            ghcr.io/sprinters-sh/sprinters-images-ubuntu-24.04-arm:latest
+            ghcr.io/sprinters-sh/sprinters-images-ubuntu-24.04-arm:${{ inputs.runner_image_version }}
