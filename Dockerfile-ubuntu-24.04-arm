@@ -142,7 +142,7 @@ RUN sed -i 's,*.tar.gz,dotnet-*.tar.gz,g' ${PATH_ROOT}/../scripts/build/install-
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-gcc-compilers.sh
 
 # Fix arm64 arch name
-RUN sed -i 's,arm64,aarch64,g' ${PATH_ROOT}/../scripts/build/install-firefox.sh \
+RUN sed -i 's,linuarm64,linux-aarch64,g' ${PATH_ROOT}/../scripts/build/install-firefox.sh \
     && sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-firefox.sh
 
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-gfortran.sh
