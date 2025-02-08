@@ -141,8 +141,8 @@ RUN sed -i 's,*.tar.gz,dotnet-*.tar.gz,g' ${PATH_ROOT}/../scripts/build/install-
 
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-gcc-compilers.sh
 
-# Skip tests due to Docker <-> VM differences
-RUN sed -i 's,invoke_tests,#invoke_tests,g' ${PATH_ROOT}/../scripts/build/install-firefox.sh \
+# Fix arm64 arch name
+RUN sed -i 's,arm64,aarch64,g' ${PATH_ROOT}/../scripts/build/install-firefox.sh \
     && sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-firefox.sh
 
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-gfortran.sh
