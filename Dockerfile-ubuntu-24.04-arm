@@ -42,7 +42,8 @@ RUN curl -f -L -o runner-image.tar.gz https://github.com/actions/runner-images/a
 
 # Patch arch references: amd64|x86_64|x64 -> arm64
 RUN grep -rl --include="*.ps1" --include="*.sh" --include="*.json" 'amd64' . | xargs sed -i 's/amd64/arm64/g'
-RUN grep -rl --include="*.ps1" --include="*.sh" --include="*.json" 'x86_64' . | xargs sed -i 's/x86_64/arm64/g'
+RUN grep -rl --include="*.json" 'x86_64' . | xargs sed -i 's/x86_64/aarch64/g'
+RUN grep -rl --include="*.ps1" --include="*.sh" 'x86_64' . | xargs sed -i 's/x86_64/arm64/g'
 RUN grep -rl --include="*.ps1" --include="*.sh" --include="*.json" 'x64' . | xargs sed -i 's/x64/arm64/g'
 
 # Skip tests due to lack of powershell on Linux arm64
@@ -210,10 +211,8 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-python.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-zstd.sh
 
 # Prevent Docker startup and skip tests due to Docker <-> VM differences
-# + Fix arm64 arch name
 RUN sed -i 's,docker info,#docker info,g' ${PATH_ROOT}/../scripts/build/install-docker.sh \
     && sed -i 's,invoke_tests,echo Skipping tests #invoke_tests,g' ${PATH_ROOT}/../scripts/build/install-docker.sh \
-    && sed -i 's,arm64,aarch64,g' ${PATH_ROOT}/../scripts/build/install-docker.sh \
     && DOCKERHUB_PULL_IMAGES=no sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-docker.sh
 
 # Add runner user to Docker Group
