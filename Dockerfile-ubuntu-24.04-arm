@@ -40,6 +40,9 @@ RUN curl -f -L -o runner-image.tar.gz https://github.com/actions/runner-images/a
     && tar xzf ./runner-image.tar.gz \
     && rm runner-image.tar.gz
 
+# Patch arch references: amd64 -> arm64
+RUN grep -rl --include="*.ps1" --include="*.sh" --include="*.json" 'amd64' . | xargs sed -i 's/amd64/arm64/g'
+
 ARG PATH_ROOT=runner-images-$ImageOS-${RUNNER_IMAGE_VERSION}/images/ubuntu/templates
 RUN chmod +x ${PATH_ROOT}/../scripts/build/*.sh
 

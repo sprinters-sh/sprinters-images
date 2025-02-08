@@ -28,6 +28,7 @@ jobs:
       - name: Extract version from Dockerfile
         run: |
           VERSION=$(grep 'ARG RUNNER_IMAGE_VERSION=' "$DOCKERFILE_NAME" | cut -d '=' -f2)
+          echo "RUNNER_IMAGE_VERSION: ${VERSION}"
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
       - name: Build and push
