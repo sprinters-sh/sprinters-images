@@ -50,7 +50,7 @@ RUN grep -rl --include="*.ps1" --include="*.sh" 'x86_64' . | xargs sed -i 's/x86
 RUN grep -rl --include="*.ps1" --include="*.sh" --include="*.json" 'x64' . | xargs sed -i 's/x64/arm64/g'
 
 # Skip tests due to lack of powershell on Linux arm64
-RUN grep -rl --include="*.sh" 'invoke_tests' . | xargs sed -i 's,invoke_tests,echo Skipping tests #invoke_tests,g'
+RUN grep -rl --include="*.sh" 'invoke_tests ' . | xargs sed -i 's,invoke_tests ,echo Skipping tests #invoke_tests ,g'
 
 ARG PATH_ROOT=runner-images-$ImageOS-${RUNNER_IMAGE_VERSION}/images/ubuntu/templates
 RUN chmod +x ${PATH_ROOT}/../scripts/build/*.sh
