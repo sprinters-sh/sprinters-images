@@ -1,17 +1,13 @@
 name: minimal
 
-on:
-  workflow_dispatch:
-    inputs:
-      runner_version:
-        description: 'Runner Version'
-        required: false
-        type: string
-        default: "2.322.0"
+on: workflow_dispatch
 
 jobs:
   build-docker-image:
     runs-on: ubuntu-latest
+    env:
+      DOCKERFILE_NAME: Dockerfile-minimal
+
     steps:
       - uses: actions/checkout@v4
 
@@ -28,15 +24,21 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Extract version from Dockerfile
+        run: |
+          VERSION=$(grep 'ARG RUNNER_VERSION=' "$DOCKERFILE_NAME" | cut -d '=' -f2)
+          echo "RUNNER_VERSION: ${VERSION}"
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: .
           provenance: false
-          file: Dockerfile-minimal
-          build-args: RUNNER_VERSION=${{ inputs.runner_version }}
+          file: ${{ env.DOCKERFILE_NAME }}
+          build-args: RUNNER_VERSION=${{ env.VERSION }}
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
             ghcr.io/sprinters-sh/sprinters-images-minimal:latest
-            ghcr.io/sprinters-sh/sprinters-images-minimal:${{ inputs.runner_version }}
+            ghcr.io/sprinters-sh/sprinters-images-minimal:${{ env.VERSION }}

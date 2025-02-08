@@ -1,7 +1,6 @@
 name: ubuntu-24.04-arm
 
-on:
-  workflow_dispatch
+on: workflow_dispatch
 
 jobs:
   build-docker-image:
