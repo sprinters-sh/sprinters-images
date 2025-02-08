@@ -92,11 +92,16 @@ RUN sudo touch /etc/waagent.conf \
 ENV INSTALLER_SCRIPT_FOLDER=${INSTALLER_SCRIPT_FOLDER}
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-apt-vital.sh
 
+# Disabled powershell as it isn't officially supported by Microsoft on Linux arm64
+# https://learn.microsoft.com/en-us/powershell/scripting/install/powershell-on-arm
 # RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-powershell.sh
 # RUN sudo -E sh -c "pwsh -f ${PATH_ROOT}/../scripts/build/Install-PowerShellModules.ps1"
 # RUN sudo -E sh -c "pwsh -f ${PATH_ROOT}/../scripts/build/Install-PowerShellAzModules.ps1"
 
-RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-actions-cache.sh
+# Skip tests due to lack of powershell on Linux arm64
+RUN sed -i 's,invoke_tests,#invoke_tests,g' ${PATH_ROOT}/../scripts/build/install-container-tools.sh \
+    && sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-actions-cache.sh \
+
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-runner-package.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-apt-common.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-azcopy.sh
@@ -190,7 +195,8 @@ RUN sed -i 's,docker info,#docker info,g' ${PATH_ROOT}/../scripts/build/install-
 # Add runner user to Docker Group
 RUN sudo -E sh -c "usermod -aG docker runner"
 
-# Disabled powershell on arm as it isn't officially supported by Microsoft
+# Disabled powershell as it isn't officially supported by Microsoft on Linux arm64
+# https://learn.microsoft.com/en-us/powershell/scripting/install/powershell-on-arm
 # RUN sudo -E sh -c "pwsh -f ${PATH_ROOT}/../scripts/build/Install-Toolset.ps1"
 # RUN sudo -E sh -c "pwsh -f ${PATH_ROOT}/../scripts/build/Configure-Toolset.ps1"
 
