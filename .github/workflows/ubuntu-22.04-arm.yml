@@ -1,4 +1,4 @@
-name: ubuntu-24.04-arm
+name: ubuntu-22.04-arm
 
 on:
   workflow_dispatch
@@ -7,7 +7,7 @@ jobs:
   build-docker-image:
     runs-on: sprinters:aws/846680362832:m8g.8xlarge:minimal:temp=1024:spot=false
     env:
-      DOCKERFILE_NAME: Dockerfile-ubuntu-24.04-arm
+      DOCKERFILE_NAME: Dockerfile-ubuntu-22.04-arm
 
     steps:
       - uses: actions/checkout@v4
@@ -40,5 +40,5 @@ jobs:
           platforms: linux/arm64
           push: true
           tags: |
-            ghcr.io/sprinters-sh/sprinters-images-ubuntu-24.04-arm:latest
-            ghcr.io/sprinters-sh/sprinters-images-ubuntu-24.04-arm:${{ env.VERSION }}
+            ghcr.io/sprinters-sh/sprinters-images-ubuntu-22.04-arm:latest
+            ghcr.io/sprinters-sh/sprinters-images-ubuntu-22.04-arm:${{ env.VERSION }}
