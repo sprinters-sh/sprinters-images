@@ -197,7 +197,10 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-packer.sh
 # https://github.com/microsoft/vcpkg/blob/master/scripts/bootstrap.sh#L186
 # RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-vcpkg.sh
 
-RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/configure-dpkg.sh
+# Disabled libicu70 download as it isn't available for arm
+RUN sed -i 's,is_ubuntu24,false,g' ${PATH_ROOT}/../scripts/build/configure-dpkg.sh \
+    && sudo -E sh -c ${PATH_ROOT}/../scripts/build/configure-dpkg.sh
+
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-yq.sh
 
 # Not in arm images
