@@ -137,7 +137,7 @@ RUN sed -i 's,invoke_tests,#invoke_tests,g' ${PATH_ROOT}/../scripts/build/instal
     && sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-container-tools.sh
 
 # Fix missing directory
-RUN mkdir -p /usr/share/dotnet/shared
+RUN sudo mkdir -p /usr/share/dotnet/shared
 # Make list of extracted sdk archives more specific to prevent accidentally picking up tar.gz files from other tools
 RUN sed -i 's,*.tar.gz,dotnet-*.tar.gz,g' ${PATH_ROOT}/../scripts/build/install-dotnetcore-sdk.sh \
    && sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-dotnetcore-sdk.sh
