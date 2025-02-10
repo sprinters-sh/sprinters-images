@@ -4,6 +4,7 @@ Sprinters Docker images
 ## Variants
 - [`minimal` (x64 and arm64)](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-minimal)
 - [`ubuntu-22.04` (x64)](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-22.04)
+- [`ubuntu-22.04-arm` (arm64)](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-22.04-arm)
 - [`ubuntu-24.04` (x64)](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-24.04)
 - [`ubuntu-24.04-arm` (arm64)](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-24.04-arm)
 
