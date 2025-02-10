@@ -136,9 +136,11 @@ RUN sed -i 's,arm64,aarch64,g' ${PATH_ROOT}/../scripts/build/install-cmake.sh \
 RUN sed -i 's,invoke_tests,#invoke_tests,g' ${PATH_ROOT}/../scripts/build/install-container-tools.sh \
     && sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-container-tools.sh
 
+# Fix missing directory
+RUN mkdir -p /usr/share/dotnet/shared
 # Make list of extracted sdk archives more specific to prevent accidentally picking up tar.gz files from other tools
 RUN sed -i 's,*.tar.gz,dotnet-*.tar.gz,g' ${PATH_ROOT}/../scripts/build/install-dotnetcore-sdk.sh \
-    && sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-dotnetcore-sdk.sh
+   && sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-dotnetcore-sdk.sh
 
 # Fix arm64 arch name
 RUN sed -i 's,linuarm64,linux-aarch64,g' ${PATH_ROOT}/../scripts/build/install-firefox.sh \
