@@ -14,6 +14,8 @@ done
 timestamp "Docker daemon is ready!"
 timestamp "Sprinters Job Started."
 echo ""
-timestamp "Instance: $(hostname)"
-timestamp "vCPUs   : $(nproc)"
-timestamp "RAM     : $(grep MemTotal /proc/meminfo | awk '{printf "%d", $2/1024/1024}') GiB"
+echo "Instance: $(hostname)"
+echo "vCPUs   : $(nproc)"
+echo "RAM     : $(grep MemTotal /proc/meminfo | awk '{value=$2/1024/1024; if(value!=int(value)) value=int(value)+1; print value}') GiB"
+echo "Disks   :"
+lsblk -d -o NAME,SIZE --bytes | awk 'NR>1 {printf "%s\t%.0f GiB\n", $1, $2/(1024^3)}'
