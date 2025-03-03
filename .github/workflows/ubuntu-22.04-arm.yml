@@ -4,7 +4,7 @@ on: workflow_dispatch
 
 jobs:
   build-docker-image:
-    runs-on: sprinters:aws:m8g.large:minimal:temp=256:spot=false
+    runs-on: sprinters:aws:m8g.large:minimal:temp=512:spot=false
     env:
       DOCKERFILE_NAME: Dockerfile-ubuntu-22.04-arm
 
