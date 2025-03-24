@@ -2,7 +2,7 @@ FROM ubuntu:22.04 AS build
 
 ARG TARGETOS
 ARG TARGETARCH
-ARG RUNNER_IMAGE_VERSION=20250302.1
+ARG RUNNER_IMAGE_VERSION=20250323.1
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV RUNNER_MANUALLY_TRAP_SIG=1
@@ -180,6 +180,7 @@ RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-android-sdk.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-pypy.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-python.sh
 RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-zstd.sh
+RUN sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-ninja.sh
 
 # Prevent Docker startup and skip tests due to Docker <-> VM differences
 RUN sed -i 's,docker info,#docker info,g' ${PATH_ROOT}/../scripts/build/install-docker.sh \
@@ -229,6 +230,7 @@ COPY --chmod=555 entrypoint.sh /entrypoint.sh
 COPY --chmod=555 start-docker.sh /start-docker.sh
 COPY --chmod=555 job-started.sh /job-started.sh
 COPY --chmod=555 job-completed.sh /job-completed.sh
+COPY --chmod=555 publish-event.sh /publish-event.sh
 
 FROM scratch AS image
 
@@ -242,6 +244,7 @@ ENV ACTIONS_RUNNER_PRINT_LOG_TO_STDOUT=1
 ENV ImageOS=ubuntu22
 ENV ACTIONS_RUNNER_HOOK_JOB_STARTED=/job-started.sh
 ENV ACTIONS_RUNNER_HOOK_JOB_COMPLETED=/job-completed.sh
+ENV SPRINTERS_RUNNER_WEBHOOK=https://console.sprinters.sh/runner/webhook
 
 LABEL org.opencontainers.image.source=https://github.com/sprinters-sh/sprinters-images
 LABEL org.opencontainers.image.description="sprinters.sh runner"

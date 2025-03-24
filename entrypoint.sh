@@ -1,5 +1,7 @@
 #!/bin/bash
 
+./publish-event.sh runner-boot
+
 # Prefix text with timestamp (Example: 2024-11-19 08:08:03 My command output)
 timestamp() {
     echo "$(date -u -Iseconds | tr 'T' ' ' | cut -d'+' -f1)" "$@"
@@ -18,4 +20,9 @@ timestamp "Starting dockerd async ..."
 /start-docker.sh &
 
 timestamp "Launching Runner with JIT config ..."
-run_quiet ./run.sh --jitconfig "$JITCONFIG"
+trap 'true' SIGTERM
+run_quiet ./run.sh --jitconfig "$JITCONFIG" &
+wait $!
+
+timestamp "Shutting down ..."
+./publish-event.sh runner-shutdown
