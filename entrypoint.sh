@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./publish-event.sh runner-boot
+/publish-event.sh runner-boot
 
 # Prefix text with timestamp (Example: 2024-11-19 08:08:03 My command output)
 timestamp() {
@@ -25,4 +25,4 @@ run_quiet ./run.sh --jitconfig "$JITCONFIG" &
 wait $!
 
 timestamp "Shutting down ..."
-./publish-event.sh runner-shutdown
+/publish-event.sh runner-shutdown

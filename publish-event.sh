@@ -1,10 +1,9 @@
 #!/bin/bash
 
 url="$SPRINTERS_RUNNER_WEBHOOK"
-
 if [ -z "$url" ]; then
   # Event publishing is disabled
-  exit 1
+  exit 0
 fi
 
 event=$1

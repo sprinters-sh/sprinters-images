@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./publish-event.sh job-started
+/publish-event.sh job-started
 
 # Prefix text with timestamp (Example: 2024-11-19 08:08:03 My command output)
 timestamp() {
