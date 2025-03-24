@@ -14,11 +14,11 @@ uuid=$(cat /proc/sys/kernel/random/uuid)
 payload="{\"event\":\"$event\",\"hostname\":\"$hostname\",\"timestamp\":\"$timestamp\"}"
 sha256=$(printf "%s" "$payload" | sha256sum | awk '{print $1}')
 
-curl -s -k "$url" \
+curl -s -k "$url" --connect-timeout 3 \
   -H "Content-Type: application/json" \
   -H "X-Runner-Delivery: $uuid" \
   -H "X-Runner-Action: event" \
   -H "X-Runner-Sha256: $sha256" \
-  -d "$payload" > /dev/null
+  -d "$payload" > /dev/null || echo "Event publishing failed"
 
 echo "$timestamp $hostname -> $event"
