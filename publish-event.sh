@@ -19,6 +19,4 @@ curl -s -k "$url" --connect-timeout 3 \
   -H "X-Runner-Delivery: $uuid" \
   -H "X-Runner-Action: event" \
   -H "X-Runner-Sha256: $sha256" \
-  -d "$payload" > /dev/null || echo "Event publishing failed"
-
-echo "$timestamp $hostname -> $event"
+  -d "$payload" || echo "$event event publishing failed"

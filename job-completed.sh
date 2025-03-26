@@ -1,6 +1,5 @@
 #!/bin/bash
 
-/publish-event.sh job-completed
+echo "Temp Usage: $(df | grep /dev | head -1  | awk '{print $5}')"
 
-echo "Disk Usage:"
-df
+/publish-event.sh job-completed
