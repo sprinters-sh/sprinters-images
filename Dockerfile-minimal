@@ -19,7 +19,7 @@ ENV ACTIONS_RUNNER_HOOK_JOB_COMPLETED=/job-completed.sh
 ENV SPRINTERS_RUNNER_WEBHOOK=https://console.sprinters.sh/runner/webhook
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates git curl sudo gnupg lsb-release openssl unzip
+    && apt-get install -y --no-install-recommends ca-certificates git curl sudo gnupg lsb-release openssl unzip lshw
 
 # https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
 RUN install -m 0755 -d /etc/apt/keyrings \
