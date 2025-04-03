@@ -16,6 +16,9 @@ run_quiet() {
     fi
 }
 
+# Load and export environment variables
+set -o allexport && source /etc/environment && set +o allexport
+
 timestamp "Starting dockerd async ..."
 /start-docker.sh &
 
