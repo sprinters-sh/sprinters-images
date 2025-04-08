@@ -64,6 +64,7 @@ COPY --chmod=555 job-completed.sh /job-completed.sh
 COPY --chmod=555 publish-event.sh /publish-event.sh
 
 USER runner
+ENV HOME=/home/runner
 
 # Quick sanity check ensuring the runner is fully functional
 RUN ./config.sh --version
