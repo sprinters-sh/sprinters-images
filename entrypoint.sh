@@ -26,7 +26,7 @@ timestamp "Launching Runner with JIT config ..."
 readonly jit_config=$JITCONFIG
 unset JITCONFIG
 trap 'true' SIGTERM
-run_quiet ./run.sh --jitconfig "$jit_config" --work "work" &
+run_quiet ./run.sh --jitconfig "$jit_config" &
 wait $!
 
 timestamp "Shutting down ..."
