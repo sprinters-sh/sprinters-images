@@ -23,8 +23,10 @@ timestamp "Starting dockerd async ..."
 /start-docker.sh &
 
 timestamp "Launching Runner with JIT config ..."
+readonly jit_config=$JITCONFIG
+unset JITCONFIG
 trap 'true' SIGTERM
-run_quiet ./run.sh --jitconfig "$JITCONFIG" &
+run_quiet ./run.sh --jitconfig "$jit_config" --work "work" &
 wait $!
 
 timestamp "Shutting down ..."

@@ -316,6 +316,7 @@ COPY --from=build / /
 
 USER runner
 WORKDIR /home/runner
+ENV HOME=/home/runner
 
 # Quick sanity check ensuring the runner is fully functional
 RUN ./config.sh --version
