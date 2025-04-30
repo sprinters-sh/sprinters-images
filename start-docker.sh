@@ -52,3 +52,6 @@ wait_for_message_and_background() {
 
 wait_for_message_and_background "containerd.log" "sudo containerd" "containerd successfully booted" "failed to start containerd"
 wait_for_message_and_background "dockerd.log" "sudo dockerd -D --containerd /run/containerd/containerd.sock" "API listen on /var/run/docker.sock" "exit status\|failed to start containerd"
+
+# Ensure Docker can be used without sudo and without CAP_DAC_OVERRIDE
+sudo chmod 666 /var/run/docker.sock
