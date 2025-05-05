@@ -15,7 +15,7 @@ RUN df
 
 # Install base packages required by GitHub's Runner Image scripts
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates git curl wget sudo gnupg lsb-release openssl software-properties-common apt-utils snap bc lshw gawk
+    && apt-get install -y --no-install-recommends ca-certificates git curl wget sudo gnupg lsb-release openssl software-properties-common apt-utils snap bc lshw gawk iptables
 
 # Disable systemctl and journalctl by aliasing them to a dummy echo
 RUN rm /usr/bin/systemctl \
