@@ -133,6 +133,8 @@ RUN sed -i 's,arm64,aarch64,g' ${PATH_ROOT}/../scripts/build/install-cmake.sh \
 
 # Skip tests due to Docker <-> VM differences
 RUN sed -i 's,invoke_tests,#invoke_tests,g' ${PATH_ROOT}/../scripts/build/install-container-tools.sh \
+    # Disable container networking plugins as there is no arm64 package
+    && sed -i 's,if is_ubuntu22; then,if is_ubuntu99; then,g' ${PATH_ROOT}/../scripts/build/install-container-tools.sh \
     && sudo -E sh -c ${PATH_ROOT}/../scripts/build/install-container-tools.sh
 
 # Fix missing directory
