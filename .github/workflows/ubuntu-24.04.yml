@@ -4,7 +4,19 @@ on: workflow_dispatch
 
 jobs:
   build-docker-image:
-    runs-on: sprinters:aws:c7i-flex.xlarge:temp=512:spot=false
+    strategy:
+      matrix:
+        include:
+          - instance: r7i.large
+            docker-image: sprinters-images-ubuntu-24.04
+            docker-platform: linux/amd64
+            docker-arm64: false
+          - instance: r8g.large
+            docker-image: sprinters-images-ubuntu-24.04-arm
+            docker-platform: linux/arm64
+            docker-arm64: true
+
+    runs-on: sprinters:aws:${{ matrix.instance }}:minimal:temp=512:spot=false
     env:
       DOCKERFILE_NAME: Dockerfile-ubuntu-24.04
 
@@ -35,9 +47,9 @@ jobs:
         with:
           context: .
           file: ${{ env.DOCKERFILE_NAME }}
-          build-args: RUNNER_IMAGE_VERSION=${{ env.VERSION }}
-          platforms: linux/amd64
+          build-args: RUNNER_IMAGE_VERSION=${{ env.VERSION }},ARM64=${{ matrix.docker-arm64 }}
+          platforms: ${{ matrix.docker-platform }}
           push: true
           tags: |
-            ghcr.io/sprinters-sh/sprinters-images-ubuntu-24.04:latest
-            ghcr.io/sprinters-sh/sprinters-images-ubuntu-24.04:${{ env.VERSION }}
+            ghcr.io/sprinters-sh/${{ matrix.docker-image }}:latest
+            ghcr.io/sprinters-sh/${{ matrix.docker-image }}:${{ env.VERSION }}
