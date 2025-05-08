@@ -184,12 +184,7 @@ fi
 
 sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-selenium.sh
 sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-packer.sh
-
-#if [ "$ARM64" != "true" ]; then
-  # Not yet available as binary for Linux arm64
-  # https://github.com/microsoft/vcpkg/blob/master/scripts/bootstrap.sh#L186
-  sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-vcpkg.sh
-#fi
+sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-vcpkg.sh
 
 if [ "$ARM64" = "true" ]; then
   # Disabled libicu70 download as it isn't available for arm
