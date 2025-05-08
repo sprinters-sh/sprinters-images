@@ -38,14 +38,14 @@ jobs:
 
       - name: Extract version from Dockerfile
         run: |
-          VERSION=$(grep 'ARG RUNNER_IMAGE_VERSION=' "$DOCKERFILE_NAME" | cut -d '=' -f2)
+          VERSION=$(grep 'ARG RUNNER_IMAGE_VERSION=' "images/$DOCKERFILE_NAME" | cut -d '=' -f2)
           echo "RUNNER_IMAGE_VERSION: ${VERSION}"
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: images
           file: ${{ env.DOCKERFILE_NAME }}
           build-args: RUNNER_IMAGE_VERSION=${{ env.VERSION }},ARM64=${{ matrix.docker-arm64 }}
           platforms: ${{ matrix.docker-platform }}
