@@ -5,6 +5,7 @@ on: workflow_dispatch
 jobs:
   build-docker-image:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - instance: r7i.large
@@ -47,7 +48,9 @@ jobs:
         with:
           context: images
           file: ${{ env.DOCKERFILE_NAME }}
-          build-args: RUNNER_IMAGE_VERSION=${{ env.VERSION }},ARM64=${{ matrix.docker-arm64 }}
+          build-args: |
+            RUNNER_IMAGE_VERSION=${{ env.VERSION }}
+            ARM64=${{ matrix.docker-arm64 }}
           platforms: ${{ matrix.docker-platform }}
           push: true
           tags: |
