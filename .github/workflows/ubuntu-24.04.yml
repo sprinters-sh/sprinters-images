@@ -18,7 +18,7 @@ jobs:
 
     runs-on: sprinters:aws:${{ matrix.instance }}:minimal:temp=512:spot=false
     env:
-      DOCKERFILE_NAME: Dockerfile-ubuntu-24.04
+      DOCKERFILE_NAME: images/Dockerfile-ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4
@@ -38,7 +38,7 @@ jobs:
 
       - name: Extract version from Dockerfile
         run: |
-          VERSION=$(grep 'ARG RUNNER_IMAGE_VERSION=' "images/$DOCKERFILE_NAME" | cut -d '=' -f2)
+          VERSION=$(grep 'ARG RUNNER_IMAGE_VERSION=' "$DOCKERFILE_NAME" | cut -d '=' -f2)
           echo "RUNNER_IMAGE_VERSION: ${VERSION}"
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
