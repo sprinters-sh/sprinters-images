@@ -199,7 +199,12 @@ if [ "$ARM64" != "true" ]; then
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-android-sdk.sh
 fi
 
+if [ "$ARM64" = "true" ]; then
+  # Fix arm64 arch name
+  sed -i 's,arm64,aarch64,g' "${PATH_ROOT}"/../scripts/build/install-pypy.sh
+fi
 sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-pypy.sh
+
 sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-python.sh
 sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-zstd.sh
 sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-ninja.sh
