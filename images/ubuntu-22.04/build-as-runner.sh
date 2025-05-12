@@ -110,8 +110,12 @@ sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-cmake.sh
 sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-codeql-bundle.sh
 
 # Skip tests due to Docker <-> VM differences
-sed -i 's,invoke_tests,#invoke_tests,g' "${PATH_ROOT}"/../scripts/build/install-container-tools.sh \
-    && sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-container-tools.sh
+sed -i 's,invoke_tests,#invoke_tests,g' "${PATH_ROOT}"/../scripts/build/install-container-tools.sh
+if [ "$ARM64" = "true" ]; then
+  # Disable container networking plugins as there is no arm64 package
+  sed -i 's,if is_ubuntu22; then,if is_ubuntu99; then,g' "${PATH_ROOT}"/../scripts/build/install-container-tools.sh
+fi
+sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-container-tools.sh
 
 # Make list of extracted sdk archives more specific to prevent accidentally picking up tar.gz files from other tools
 sed -i 's,*.tar.gz,dotnet-*.tar.gz,g' "${PATH_ROOT}"/../scripts/build/install-dotnetcore-sdk.sh \
