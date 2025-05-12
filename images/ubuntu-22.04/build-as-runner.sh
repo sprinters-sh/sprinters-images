@@ -49,7 +49,7 @@ cp -r "${PATH_ROOT}"/../assets/post-gen ${IMAGE_FOLDER}
 cp -r "${PATH_ROOT}"/../scripts/tests ${IMAGE_FOLDER}
 cp -r "${PATH_ROOT}"/../scripts/docs-gen ${IMAGE_FOLDER}
 cp -r "${PATH_ROOT}"/../../../helpers/software-report-base ${IMAGE_FOLDER}/docs-gen/
-cp "${PATH_ROOT}"/../toolsets/toolset-2404.json ${INSTALLER_SCRIPT_FOLDER}/toolset.json
+cp "${PATH_ROOT}"/../toolsets/toolset-2204.json ${INSTALLER_SCRIPT_FOLDER}/toolset.json
 
 mv ${IMAGE_FOLDER}/docs-gen ${IMAGE_FOLDER}/SoftwareReport \
     && mv ${IMAGE_FOLDER}/post-gen ${IMAGE_FOLDER}/post-generation
