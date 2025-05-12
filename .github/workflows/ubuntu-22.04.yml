@@ -4,9 +4,22 @@ on: workflow_dispatch
 
 jobs:
   build-docker-image:
-    runs-on: sprinters:aws:c7i-flex.large:temp=512:spot=false
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - instance: c7i-flex.large
+            docker-image: sprinters-images-ubuntu-22.04
+            docker-platform: linux/amd64
+            docker-arm64: false
+          - instance: m8g.large
+            docker-image: sprinters-images-ubuntu-22.04-arm
+            docker-platform: linux/arm64
+            docker-arm64: true
+
+    runs-on: sprinters:aws:${{ matrix.instance }}:minimal:temp=512:spot=false
     env:
-      DOCKERFILE_NAME: Dockerfile-ubuntu-22.04
+      DOCKERFILE_NAME: images/Dockerfile-ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v4
@@ -33,12 +46,13 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: images
           file: ${{ env.DOCKERFILE_NAME }}
-          build-args: RUNNER_IMAGE_VERSION=${{ env.VERSION }}
-          platforms: linux/amd64
+          build-args: |
+            RUNNER_IMAGE_VERSION=${{ env.VERSION }}
+            ARM64=${{ matrix.docker-arm64 }}
+          platforms: ${{ matrix.docker-platform }}
           push: true
           tags: |
-            ghcr.io/sprinters-sh/sprinters-images-ubuntu-22.04:latest
-            ghcr.io/sprinters-sh/sprinters-images-ubuntu-22.04:${{ env.VERSION }}
-          outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=sprinters.sh runner,annotation-index.org.opencontainers.image.licenses=MIT,annotation-index.org.opencontainers.source=https://github.com/sprinters-sh/sprinters-images
+            ghcr.io/sprinters-sh/${{ matrix.docker-image }}:latest
+            ghcr.io/sprinters-sh/${{ matrix.docker-image }}:${{ env.VERSION }}
