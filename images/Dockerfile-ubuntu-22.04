@@ -1,6 +1,6 @@
 FROM ubuntu:22.04 AS build
 
-ARG RUNNER_IMAGE_VERSION=20250511.1
+ARG RUNNER_IMAGE_VERSION=20250504.1
 ARG ARM64=false
 
 RUN --mount=source=ubuntu-22.04/setup-as-root.sh,target=/setup-as-root.sh /setup-as-root.sh
