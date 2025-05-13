@@ -6,6 +6,7 @@ set -euo pipefail
 readonly RUNNER_IMAGE_VERSION=$1
 readonly ARM64=$2
 readonly MINIMAL=$3
+readonly SLIM=$4
 
 readonly ImageOS=ubuntu24
 readonly PATH_ROOT=runner-images-$ImageOS-${RUNNER_IMAGE_VERSION}/images/ubuntu/templates
@@ -58,7 +59,12 @@ if [ "$MINIMAL" != "true" ]; then
   cp -r "${PATH_ROOT}"/../../../helpers/software-report-base ${IMAGE_FOLDER}/docs-gen/
 fi
 
-cp "${PATH_ROOT}"/../toolsets/toolset-2404.json ${INSTALLER_SCRIPT_FOLDER}/toolset.json
+if [ "$SLIM" = "true" ]; then
+  # Remove Android and CodeQL from toolset as they aren't included in the slim images
+  jq -M -C 'del(.android) | .toolcache = (.toolcache | map(select(.name != "CodeQL")))' "${PATH_ROOT}"/../toolsets/toolset-2404.json > ${INSTALLER_SCRIPT_FOLDER}/toolset.json
+else
+  cp "${PATH_ROOT}"/../toolsets/toolset-2404.json ${INSTALLER_SCRIPT_FOLDER}/toolset.json
+fi
 
 if [ "$MINIMAL" != "true" ]; then
   mv ${IMAGE_FOLDER}/docs-gen ${IMAGE_FOLDER}/SoftwareReport
@@ -126,7 +132,9 @@ if [ "$MINIMAL" != "true" ]; then
   fi
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-cmake.sh
 
-  sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-codeql-bundle.sh
+  if [ "$SLIM" != "true" ]; then
+    sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-codeql-bundle.sh
+  fi
 
   # Skip tests due to Docker <-> VM differences
   sed -i 's,invoke_tests,#invoke_tests,g' "${PATH_ROOT}"/../scripts/build/install-container-tools.sh \
@@ -163,7 +171,9 @@ if [ "$MINIMAL" != "true" ]; then
   if [ "$ARM64" != "true" ]; then
     # Not in arm images
     sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-google-chrome.sh
-    sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-haskell.sh
+    if [ "$SLIM" != "true" ]; then
+      sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-haskell.sh
+    fi
   fi
 
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-java-tools.sh
@@ -202,7 +212,9 @@ if [ "$MINIMAL" != "true" ]; then
 
   if [ "$ARM64" != "true" ]; then
     # Not in arm images
-    sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-julia.sh
+    if [ "$SLIM" != "true" ]; then
+      sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-julia.sh
+    fi
   fi
 
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-selenium.sh
@@ -219,7 +231,9 @@ if [ "$MINIMAL" != "true" ]; then
 
   if [ "$ARM64" != "true" ]; then
     # Not in arm images
-    sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-android-sdk.sh
+    if [ "$SLIM" != "true" ]; then
+      sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-android-sdk.sh
+    fi
   fi
 
   if [ "$ARM64" = "true" ]; then

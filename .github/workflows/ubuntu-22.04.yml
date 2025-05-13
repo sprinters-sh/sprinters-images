@@ -3,34 +3,52 @@ name: ubuntu-22.04
 on: workflow_dispatch
 
 jobs:
-  build-docker-image:
+  build:
     strategy:
       fail-fast: false
       matrix:
         include:
-          - instance: r7i.large
-            docker-image: sprinters-images-ubuntu-22.04
+          - docker-image: sprinters-images-ubuntu-22.04
             docker-platform: linux/amd64
-            docker-arm64: false
-            docker-minimal: false
+            arm64: false
+            minimal: false
+            slim: false
+            instance: r7i.large
 
-          - instance: r8g.large
-            docker-image: sprinters-images-ubuntu-22.04-arm
+          - docker-image: sprinters-images-ubuntu-22.04-arm
             docker-platform: linux/arm64
-            docker-arm64: true
-            docker-minimal: false
+            arm64: true
+            minimal: false
+            slim: false
+            instance: r8g.large
 
-          - instance: r7i.large
-            docker-image: sprinters-images-ubuntu-22.04-minimal
+          - docker-image: sprinters-images-ubuntu-22.04-slim
             docker-platform: linux/amd64
-            docker-arm64: false
-            docker-minimal: true
+            arm64: false
+            minimal: false
+            slim: true
+            instance: r7i.large
 
-          - instance: r8g.large
-            docker-image: sprinters-images-ubuntu-22.04-arm-minimal
+          - docker-image: sprinters-images-ubuntu-22.04-arm-slim
             docker-platform: linux/arm64
-            docker-arm64: true
-            docker-minimal: true
+            arm64: true
+            minimal: false
+            slim: true
+            instance: r8g.large
+
+          - docker-image: sprinters-images-ubuntu-22.04-minimal
+            docker-platform: linux/amd64
+            arm64: false
+            minimal: true
+            slim: false
+            instance: r7i.large
+
+          - docker-image: sprinters-images-ubuntu-22.04-arm-minimal
+            docker-platform: linux/arm64
+            arm64: true
+            minimal: true
+            slim: false
+            instance: r8g.large
 
     runs-on: sprinters:aws:${{ matrix.instance }}:minimal:temp=512:spot=false
     env:
@@ -65,8 +83,9 @@ jobs:
           file: ${{ env.DOCKERFILE_NAME }}
           build-args: |
             RUNNER_IMAGE_VERSION=${{ env.VERSION }}
-            ARM64=${{ matrix.docker-arm64 }}
-            MINIMAL=${{ matrix.docker-minimal }}
+            ARM64=${{ matrix.arm64 }}
+            MINIMAL=${{ matrix.minimal }}
+            SLIM=${{ matrix.slim }}
           platforms: ${{ matrix.docker-platform }}
           push: true
           tags: |

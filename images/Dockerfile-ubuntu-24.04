@@ -3,13 +3,14 @@ FROM ubuntu:24.04 AS build
 ARG RUNNER_IMAGE_VERSION=20250511.1
 ARG ARM64=false
 ARG MINIMAL=false
+ARG SLIM=false
 
 RUN --mount=source=ubuntu-24.04/setup-as-root.sh,target=/setup-as-root.sh /setup-as-root.sh
 
 USER runner
 WORKDIR /tmp
 
-RUN --mount=source=ubuntu-24.04/build-as-runner.sh,target=/build-as-runner.sh /build-as-runner.sh $RUNNER_IMAGE_VERSION $ARM64 $MINIMAL
+RUN --mount=source=ubuntu-24.04/build-as-runner.sh,target=/build-as-runner.sh /build-as-runner.sh $RUNNER_IMAGE_VERSION $ARM64 $MINIMAL $SLIM
 
 COPY --chmod=555 common/entrypoint.sh /entrypoint.sh
 COPY --chmod=555 common/start-docker.sh /start-docker.sh
