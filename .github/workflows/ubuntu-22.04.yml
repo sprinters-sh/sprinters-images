@@ -8,14 +8,29 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - instance: c7i-flex.large
+          - instance: r7i.large
             docker-image: sprinters-images-ubuntu-22.04
             docker-platform: linux/amd64
             docker-arm64: false
-          - instance: m8g.large
+            docker-minimal: false
+
+          - instance: r8g.large
             docker-image: sprinters-images-ubuntu-22.04-arm
             docker-platform: linux/arm64
             docker-arm64: true
+            docker-minimal: false
+
+          - instance: r7i.large
+            docker-image: sprinters-images-ubuntu-22.04-minimal
+            docker-platform: linux/amd64
+            docker-arm64: false
+            docker-minimal: true
+
+          - instance: r8g.large
+            docker-image: sprinters-images-ubuntu-22.04-arm-minimal
+            docker-platform: linux/arm64
+            docker-arm64: true
+            docker-minimal: true
 
     runs-on: sprinters:aws:${{ matrix.instance }}:minimal:temp=512:spot=false
     env:
@@ -51,6 +66,7 @@ jobs:
           build-args: |
             RUNNER_IMAGE_VERSION=${{ env.VERSION }}
             ARM64=${{ matrix.docker-arm64 }}
+            MINIMAL=${{ matrix.docker-minimal }}
           platforms: ${{ matrix.docker-platform }}
           push: true
           tags: |

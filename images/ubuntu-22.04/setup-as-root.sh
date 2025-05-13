@@ -7,7 +7,7 @@ readonly IMAGE_FOLDER=/imagegeneration
 
 # Install base packages required by GitHub's Runner Image scripts
 apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates git curl wget sudo gnupg lsb-release openssl software-properties-common apt-utils snap bc lshw gawk iptables
+    && apt-get install -y --no-install-recommends ca-certificates git curl wget sudo gnupg lsb-release openssl software-properties-common apt-utils snap bc lshw gawk iptables ssh
 
 # Disable systemctl and journalctl by aliasing them to a dummy echo
 rm /usr/bin/systemctl \
