@@ -6,26 +6,26 @@ Sprinters Docker images
 ### Ubuntu 24.04
 
 #### x64
-- [`ubuntu-24.04` (x64)](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-24.04)
-- [`ubuntu-24.04-slim` (x64)](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-24.04-slim)
-- [`ubuntu-24.04-minimal` (x64)](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-24.04-minimal)
+- [`ubuntu-24.04`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-24.04)
+- [`ubuntu-24.04-slim`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-24.04-slim)
+- [`ubuntu-24.04-minimal`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-24.04-minimal)
 
 #### arm64
-- [`ubuntu-24.04-arm` (arm64)](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-24.04-arm)
-- [`ubuntu-24.04-arm-slim` (arm64)](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-24.04-arm-slim)
-- [`ubuntu-24.04-arm-minimal` (arm64)](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-24.04-arm-minimal)
+- [`ubuntu-24.04-arm`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-24.04-arm)
+- [`ubuntu-24.04-arm-slim`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-24.04-arm-slim)
+- [`ubuntu-24.04-arm-minimal`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-24.04-arm-minimal)
 
 ### Ubuntu 22.04
 
 #### x64
-- [`ubuntu-22.04` (x64)](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-22.04)
-- [`ubuntu-22.04-slim` (x64)](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-22.04-slim)
-- [`ubuntu-22.04-minimal` (x64)](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-22.04-minimal)
+- [`ubuntu-22.04`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-22.04)
+- [`ubuntu-22.04-slim`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-22.04-slim)
+- [`ubuntu-22.04-minimal`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-22.04-minimal)
 
 #### arm64
-- [`ubuntu-22.04-arm` (arm64)](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-22.04-arm)
-- [`ubuntu-22.04-arm-slim` (arm64)](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-22.04-arm-slim)
-- [`ubuntu-22.04-arm-minimal` (arm64)](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-22.04-arm-minimal)
+- [`ubuntu-22.04-arm`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-22.04-arm)
+- [`ubuntu-22.04-arm-slim`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-22.04-arm-slim)
+- [`ubuntu-22.04-arm-minimal`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-22.04-arm-minimal)
 
 ## License
 MIT License
