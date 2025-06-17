@@ -6,6 +6,7 @@ until docker info >/dev/null 2>&1; do
     echo "Waiting for Docker daemon to be ready..."
     sleep 1
 done
+
 echo
 echo "Runner powered by Sprinters"
 echo "---------------------------"
