@@ -1,6 +1,11 @@
 name: ubuntu-22.04
 
-on: workflow_dispatch
+on:
+  push:
+    paths-ignore:
+      - images/*.cmd
+      - README.md
+      - LICENSE
 
 jobs:
   build:
@@ -50,7 +55,7 @@ jobs:
             slim: false
             instance: r8g.large
 
-    runs-on: sprinters:aws:${{ matrix.instance }}:minimal:temp=512:spot=false
+    runs-on: sprinters:aws:${{ matrix.instance }}:ap-south-1:ubuntu-24.04-minimal:temp=512:spot=false
     env:
       DOCKERFILE_NAME: images/Dockerfile-ubuntu-22.04
 
