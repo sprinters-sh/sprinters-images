@@ -18,44 +18,44 @@ jobs:
             arm64: false
             minimal: false
             slim: false
-            instance: r7i.large
+            instance: r7i.large:ubuntu-24.04-minimal
 
           - docker-image: sprinters-images-ubuntu-24.04-arm
             docker-platform: linux/arm64
             arm64: true
             minimal: false
             slim: false
-            instance: r8g.large
+            instance: r8g.large:ubuntu-24.04-arm-minimal
 
           - docker-image: sprinters-images-ubuntu-24.04-slim
             docker-platform: linux/amd64
             arm64: false
             minimal: false
             slim: true
-            instance: r7i.large
+            instance: r7i.large:ubuntu-24.04-minimal
 
           - docker-image: sprinters-images-ubuntu-24.04-arm-slim
             docker-platform: linux/arm64
             arm64: true
             minimal: false
             slim: true
-            instance: r8g.large
+            instance: r8g.large:ubuntu-24.04-arm-minimal
 
           - docker-image: sprinters-images-ubuntu-24.04-minimal
             docker-platform: linux/amd64
             arm64: false
             minimal: true
             slim: false
-            instance: r7i.large
+            instance: r7i.large:ubuntu-24.04-minimal
 
           - docker-image: sprinters-images-ubuntu-24.04-arm-minimal
             docker-platform: linux/arm64
             arm64: true
             minimal: true
             slim: false
-            instance: r8g.large
+            instance: r8g.large:ubuntu-24.04-arm-minimal
 
-    runs-on: sprinters:aws:${{ matrix.instance }}:ap-south-1:ubuntu-24.04-minimal:temp=512:spot=false
+    runs-on: sprinters:aws:${{ matrix.instance }}:ap-south-1:temp=512:spot=false
     env:
       DOCKERFILE_NAME: images/Dockerfile-ubuntu-24.04
 
