@@ -133,8 +133,11 @@ if [ "$MINIMAL" != "true" ]; then
   fi
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-cmake.sh
 
-  if [ "$SLIM" != "true" ]; then
-      sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-codeql-bundle.sh
+  if [ "$ARM64" != "true" ]; then
+    # Not in arm images
+    if [ "$SLIM" != "true" ]; then
+        sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-codeql-bundle.sh
+    fi
   fi
 
   # Skip tests due to Docker <-> VM differences
