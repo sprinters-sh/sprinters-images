@@ -96,3 +96,8 @@ jobs:
           tags: |
             ghcr.io/sprinters-sh/${{ matrix.docker-image }}:latest
             ghcr.io/sprinters-sh/${{ matrix.docker-image }}:${{ env.VERSION }}
+
+      - name: Smoke test
+        env:
+          DOCKER_IMAGE: ghcr.io/sprinters-sh/${{ matrix.docker-image }}:${{ env.VERSION }}
+        run: docker run --rm $DOCKER_IMAGE ./config.sh --version
