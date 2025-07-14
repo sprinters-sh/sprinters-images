@@ -20,13 +20,6 @@ jobs:
             slim: false
             instance: r7i.large:ubuntu-24.04-minimal
 
-          - docker-image: sprinters-images-ubuntu-24.04-arm
-            docker-platform: linux/arm64
-            arm64: true
-            minimal: false
-            slim: false
-            instance: r8g.large:ubuntu-24.04-arm-minimal:ap-south-1
-
           - docker-image: sprinters-images-ubuntu-24.04-slim
             docker-platform: linux/amd64
             arm64: false
@@ -34,19 +27,19 @@ jobs:
             slim: true
             instance: r7i.large:ubuntu-24.04-minimal
 
-          - docker-image: sprinters-images-ubuntu-24.04-arm-slim
-            docker-platform: linux/arm64
-            arm64: true
-            minimal: false
-            slim: true
-            instance: r8g.large:ubuntu-24.04-arm-minimal:ap-south-1
-
           - docker-image: sprinters-images-ubuntu-24.04-minimal
             docker-platform: linux/amd64
             arm64: false
             minimal: true
             slim: false
             instance: r7i.large:ubuntu-24.04-minimal
+
+          - docker-image: sprinters-images-ubuntu-24.04-arm
+            docker-platform: linux/arm64
+            arm64: true
+            minimal: false
+            slim: false
+            instance: r8g.large:ubuntu-24.04-arm-minimal:ap-south-1
 
           - docker-image: sprinters-images-ubuntu-24.04-arm-minimal
             docker-platform: linux/arm64
@@ -81,6 +74,8 @@ jobs:
           echo "RUNNER_IMAGE_VERSION: ${VERSION}"
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
+      # Should be changed to build, smoke-test, push once this is resolved:
+      # https://github.com/docker/build-push-action/issues/1387
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
