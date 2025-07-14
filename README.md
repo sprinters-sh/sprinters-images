@@ -12,7 +12,6 @@ Sprinters Docker images
 
 #### arm64
 - [`ubuntu-24.04-arm`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-24.04-arm)
-- [`ubuntu-24.04-arm-slim`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-24.04-arm-slim)
 - [`ubuntu-24.04-arm-minimal`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-24.04-arm-minimal)
 
 ### Ubuntu 22.04
@@ -24,7 +23,6 @@ Sprinters Docker images
 
 #### arm64
 - [`ubuntu-22.04-arm`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-22.04-arm)
-- [`ubuntu-22.04-arm-slim`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-22.04-arm-slim)
 - [`ubuntu-22.04-arm-minimal`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-22.04-arm-minimal)
 
 ## License
