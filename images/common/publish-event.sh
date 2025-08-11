@@ -1,9 +1,10 @@
 #!/bin/bash
 # shellcheck disable=SC2155
 
+readonly event_name=$1
 readonly url="$SPRINTERS_RUNNER_WEBHOOK"
 if [ -z "$url" ]; then
-  # Event publishing is disabled
+  echo "Skipping event publishing for event: $event_name"
   exit 0
 fi
 
@@ -26,7 +27,7 @@ get_env_value_number() {
 }
 
 
-readonly event="\"event\":\"$1\""
+readonly event="\"event\":\"$event_name\""
 readonly hostname="\"hostname\":\"$(hostname)\""
 readonly timestamp="\"timestamp\":\"$(date -u -Ins  | tr ',' '.' | cut -c1-23)Z\""
 readonly runner_name="\"runner_name\":$(get_env_value_string RUNNER_NAME)"

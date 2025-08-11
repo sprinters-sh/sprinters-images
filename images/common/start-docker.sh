@@ -30,7 +30,7 @@ wait_for_message_and_background() {
     touch "$process_log"
 
     # Start process with timestamp
-    (timestamp "Process starting"; $process_command) > >(run_quiet tee "$process_log") 2>&1 &
+    (set -e; timestamp "Process starting"; $process_command) > >(run_quiet tee "$process_log") 2>&1 &
     local pid=$!
 
     timestamp "Waiting for success message..."
@@ -39,7 +39,11 @@ wait_for_message_and_background() {
             break
         fi
         if grep -q "$failure_regex" "$process_log"; then
-            echo "Failure message detected. Exiting with failure."
+            timestamp "Failure message detected. Exiting with failure."
+            exit 1
+        fi
+        if ! kill -0 "$pid" 2>/dev/null; then
+            timestamp "Process died. Exiting with failure."
             exit 1
         fi
         sleep 0.1
@@ -50,8 +54,8 @@ wait_for_message_and_background() {
     disown $pid
 }
 
-wait_for_message_and_background "containerd.log" "sudo containerd" "containerd successfully booted" "failed to start containerd"
-wait_for_message_and_background "dockerd.log" "sudo dockerd -D --containerd /run/containerd/containerd.sock" "API listen on /var/run/docker.sock" "exit status\|failed to start containerd"
+wait_for_message_and_background "containerd.log" "sudo -n containerd" "containerd successfully booted" "failed to start containerd"
+wait_for_message_and_background "dockerd.log" "sudo -n dockerd -D --containerd /run/containerd/containerd.sock" "API listen on /var/run/docker.sock" "exit status\|failed to start containerd"
 
 # Ensure Docker can be used without sudo and without CAP_DAC_OVERRIDE
-sudo chmod 666 /var/run/docker.sock
+sudo -n chmod 666 /var/run/docker.sock
