@@ -18,14 +18,14 @@ jobs:
             arm64: false
             minimal: false
             slim: false
-            instance: r8i-flex.large:ubuntu-24.04-minimal:temp=128
+            instance: m6id.xlarge:ubuntu-24.04-minimal
 
           - docker-image: sprinters-images-ubuntu-22.04-slim
             docker-platform: linux/amd64
             arm64: false
             minimal: false
             slim: true
-            instance: r8i-flex.large:ubuntu-24.04-minimal:temp=64
+            instance: m6id.xlarge:ubuntu-24.04-minimal
 
           - docker-image: sprinters-images-ubuntu-22.04-minimal
             docker-platform: linux/amd64
@@ -39,14 +39,14 @@ jobs:
             arm64: true
             minimal: false
             slim: false
-            instance: r7gd.medium:ubuntu-24.04-arm-minimal:ap-south-1
+            instance: r7gd.large:ubuntu-24.04-arm-minimal:ap-south-1
 
           - docker-image: sprinters-images-ubuntu-22.04-arm-minimal
             docker-platform: linux/arm64
             arm64: true
             minimal: true
             slim: false
-            instance: r7gd.medium:ubuntu-24.04-arm-minimal:ap-south-1
+            instance: r7gd.large:ubuntu-24.04-arm-minimal:ap-south-1
 
     runs-on:
       - sprinters:aws:${{ matrix.instance }}:spot=auto
