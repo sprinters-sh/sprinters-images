@@ -18,42 +18,42 @@ jobs:
             arm64: false
             minimal: false
             slim: false
-            instance: r7i.large:ubuntu-24.04-minimal
+            instance: r7i.large:ubuntu-24.04-minimal:temp=64
 
           - docker-image: sprinters-images-ubuntu-24.04-slim
             docker-platform: linux/amd64
             arm64: false
             minimal: false
             slim: true
-            instance: r7i.large:ubuntu-24.04-minimal
+            instance: r7i.large:ubuntu-24.04-minimal:temp=16
 
           - docker-image: sprinters-images-ubuntu-24.04-minimal
             docker-platform: linux/amd64
             arm64: false
             minimal: true
             slim: false
-            instance: r7i.large:ubuntu-24.04-minimal
+            instance: r7i.large:ubuntu-24.04-minimal:temp=8
 
           - docker-image: sprinters-images-ubuntu-24.04-arm
             docker-platform: linux/arm64
             arm64: true
             minimal: false
             slim: false
-            instance: r8g.large:ubuntu-24.04-arm-minimal:ap-south-1
+            instance: r8gd.medium:ubuntu-24.04-arm-minimal:ap-south-1
 
           - docker-image: sprinters-images-ubuntu-24.04-arm-minimal
             docker-platform: linux/arm64
             arm64: true
             minimal: true
             slim: false
-            instance: r8g.large:ubuntu-24.04-arm-minimal:ap-south-1
+            instance: r8gd.medium:ubuntu-24.04-arm-minimal:ap-south-1
 
-    runs-on: sprinters:aws:${{ matrix.instance }}:temp=512:spot=false
+    runs-on: sprinters:aws:${{ matrix.instance }}:spot=auto
     env:
       DOCKERFILE_NAME: images/Dockerfile-ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
