@@ -39,14 +39,14 @@ jobs:
             arm64: true
             minimal: false
             slim: false
-            instance: r8gd.medium:ubuntu-24.04-arm-minimal:ap-south-1
+            instance: r7gd.medium:ubuntu-24.04-arm-minimal:ap-south-1
 
           - docker-image: sprinters-images-ubuntu-22.04-arm-minimal
             docker-platform: linux/arm64
             arm64: true
             minimal: true
             slim: false
-            instance: r8gd.medium:ubuntu-24.04-arm-minimal:ap-south-1
+            instance: r7gd.medium:ubuntu-24.04-arm-minimal:ap-south-1
 
     runs-on: sprinters:aws:${{ matrix.instance }}:spot=auto
     env:
