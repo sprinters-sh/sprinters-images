@@ -1,4 +1,4 @@
-name: ubuntu-22.04
+name: ubuntu-24.04-arm
 
 on:
   push:
@@ -8,11 +8,11 @@ on:
       - LICENSE
 
 jobs:
-  ubuntu-2204:
+  ubuntu-2404-arm:
     uses: ./.github/workflows/ubuntu.yml
     with:
-      ubuntu-version: 22.04
-      arm64: false
+      ubuntu-version: 24.04
+      arm64: true
       minimal: false
       slim: false
-      instance: m6id.xlarge:ubuntu-24.04-minimal
+      instance: r7gd.large:ubuntu-24.04-arm-minimal:ap-south-1

@@ -1,4 +1,4 @@
-name: ubuntu-24.04
+name: ubuntu-24.04-arm-minimal
 
 on:
   push:
@@ -8,11 +8,11 @@ on:
       - LICENSE
 
 jobs:
-  ubuntu-2404:
+  ubuntu-2404-arm-minimal:
     uses: ./.github/workflows/ubuntu.yml
     with:
       ubuntu-version: 24.04
-      arm64: false
-      minimal: false
+      arm64: true
+      minimal: true
       slim: false
-      instance: m6id.xlarge:ubuntu-24.04-minimal
+      instance: r7gd.large:ubuntu-24.04-arm-minimal:ap-south-1

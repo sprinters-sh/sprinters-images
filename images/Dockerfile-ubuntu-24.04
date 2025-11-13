@@ -31,7 +31,7 @@ ENV ACTIONS_RUNNER_HOOK_JOB_COMPLETED=/job-completed.sh
 ENV SPRINTERS_RUNNER_WEBHOOK=https://console.sprinters.sh/runner/webhook
 
 LABEL org.opencontainers.image.source=https://github.com/sprinters-sh/sprinters-images
-LABEL org.opencontainers.image.description="sprinters.sh runner"
+LABEL org.opencontainers.image.description="sprinters.sh GitHub Actions runner"
 LABEL org.opencontainers.image.licenses=MIT
 LABEL sh.sprinters.runner-image.version=$RUNNER_IMAGE_VERSION
 
