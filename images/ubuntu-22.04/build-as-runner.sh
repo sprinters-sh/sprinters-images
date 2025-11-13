@@ -78,10 +78,13 @@ sudo -E sh -c "${PATH_ROOT}"/../scripts/build/configure-image-data.sh
 # 1. Create a dummy Azure Linux VM Agent config file
 # 2. Create a dummy MOTD config file
 # 3. Avoid modifying the real /etc/hosts as Docker prohibits this
+# 4. No need to disable man-db as it is not installed
 sudo touch /etc/waagent.conf \
     && sudo touch /etc/default/motd-news \
     && sed -i 's,/etc/hosts,/etc/hosts0,g' "${PATH_ROOT}"/../scripts/build/configure-environment.sh \
     && sudo touch /etc/hosts0 \
+    && sed -i 's,echo "set man-db/auto-update false",#echo "set man-db/auto-update false",g' "${PATH_ROOT}"/../scripts/build/configure-environment.sh \
+    && sed -i 's,dpkg-reconfigure man-db,#dpkg-reconfigure man-db,g' "${PATH_ROOT}"/../scripts/build/configure-environment.sh \
     && sudo -E sh -c "${PATH_ROOT}"/../scripts/build/configure-environment.sh
 
 sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-apt-vital.sh
