@@ -1,0 +1,18 @@
+name: ubuntu-22.04-minimal
+
+on:
+  push:
+    paths-ignore:
+      - images/*.cmd
+      - README.md
+      - LICENSE
+
+jobs:
+  build:
+    uses: ./.github/workflows/ubuntu.yml
+    with:
+      ubuntu-version: 22.04
+      arm64: false
+      minimal: true
+      slim: false
+      instance: m8i-flex.large:ubuntu-24.04-minimal:temp=8

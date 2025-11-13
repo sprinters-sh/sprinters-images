@@ -1,0 +1,75 @@
+name: ubuntu
+
+on:
+  workflow_call:
+    inputs:
+      ubuntu-version:
+        required: true
+        type: string
+      arm64:
+        required: true
+        type: boolean
+      minimal:
+        required: true
+        type: boolean
+      slim:
+        required: true
+        type: boolean
+      instance:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on:
+      - sprinters:aws:${{ inputs.instance }}:spot=auto
+      - ${{ github.run_id }}-${{ github.run_attempt }}-build-${{ inputs.docker-image }}
+
+    env:
+      DOCKERFILE_NAME: images/Dockerfile-ubuntu-${{ inputs.ubuntu-version }}
+      DOCKER_IMAGE: sprinters-image-ubuntu-${{ inputs.ubuntu-version }}${{ inputs.arm64 == 'true' && '-arm' || '' }}${{ inputs.minimal == 'true' && '-minimal' || '' }}${{ inputs.slim == 'true' && '-slim' || '' }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract version from Dockerfile
+        run: |
+          VERSION=$(grep 'ARG RUNNER_IMAGE_VERSION=' "$DOCKERFILE_NAME" | cut -d '=' -f2)
+          echo "RUNNER_IMAGE_VERSION: ${VERSION}"
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
+      # Should be changed to build, smoke-test, push once this is resolved:
+      # https://github.com/docker/build-push-action/issues/1387
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: images
+          file: ${{ env.DOCKERFILE_NAME }}
+          build-args: |
+            RUNNER_IMAGE_VERSION=${{ env.VERSION }}
+            ARM64=${{ inputs.arm64 }}
+            MINIMAL=${{ inputs.minimal }}
+            SLIM=${{ inputs.slim }}
+          platforms: ${{ inputs.arm64 == 'true' && 'linux/arm64' || 'linux/amd64' }}
+          push: true
+          tags: |
+            ghcr.io/sprinters-sh/${{ env.DOCKER_IMAGE }}:latest
+            ghcr.io/sprinters-sh/${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
+
+      - name: Smoke test
+        env:
+          DOCKER_TAG: ghcr.io/sprinters-sh/${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
+        run: docker run --rm $DOCKER_TAG ./config.sh --version

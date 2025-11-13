@@ -1,11 +1,12 @@
 name: ubuntu-24.04
 
 on:
-  push:
-    paths-ignore:
-      - images/*.cmd
-      - README.md
-      - LICENSE
+  workflow_dispatch
+#  push:
+#    paths-ignore:
+#      - images/*.cmd
+#      - README.md
+#      - LICENSE
 
 jobs:
   build:
@@ -32,7 +33,7 @@ jobs:
             arm64: false
             minimal: true
             slim: false
-            instance: r8i-flex.large:ubuntu-24.04-minimal:temp=4
+            instance: m8i-flex.large:ubuntu-24.04-minimal:temp=8
 
           - docker-image: sprinters-images-ubuntu-24.04-arm
             docker-platform: linux/arm64
