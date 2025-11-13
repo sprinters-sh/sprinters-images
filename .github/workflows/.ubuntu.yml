@@ -1,4 +1,4 @@
-name: ubuntu
+name: .ubuntu
 
 on:
   workflow_call:
@@ -27,7 +27,7 @@ jobs:
 
     env:
       DOCKERFILE_NAME: images/Dockerfile-ubuntu-${{ inputs.ubuntu-version }}
-      DOCKER_IMAGE: sprinters-image-ubuntu-${{ inputs.ubuntu-version }}${{ inputs.arm64 && '-arm' || '' }}${{ inputs.minimal && '-minimal' || '' }}${{ inputs.slim && '-slim' || '' }}
+      DOCKER_IMAGE: sprinters-images-ubuntu-${{ inputs.ubuntu-version }}${{ inputs.arm64 && '-arm' || '' }}${{ inputs.minimal && '-minimal' || '' }}${{ inputs.slim && '-slim' || '' }}
 
     steps:
       - uses: actions/checkout@v5
