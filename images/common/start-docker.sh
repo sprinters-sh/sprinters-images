@@ -33,17 +33,17 @@ wait_for_message_and_background() {
     (set -e; timestamp "Process starting"; $process_command) > >(run_quiet tee "$process_log") 2>&1 &
     local pid=$!
 
-    timestamp "Waiting for success message..."
+    timestamp "Waiting for '$process_command' success message..."
     while true; do
         if grep -q "$success_regex" "$process_log"; then
             break
         fi
         if grep -q "$failure_regex" "$process_log"; then
-            timestamp "Failure message detected. Exiting with failure."
+            timestamp "'$process_command' failure message detected. Exiting with failure."
             exit 1
         fi
         if ! kill -0 "$pid" 2>/dev/null; then
-            timestamp "Process died. Exiting with failure."
+            timestamp "'$process_command' died. Exiting with failure."
             exit 1
         fi
         sleep 0.1

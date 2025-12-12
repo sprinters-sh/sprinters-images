@@ -2,10 +2,14 @@
 
 /publish-event.sh job-started
 
-until docker info >/dev/null 2>&1; do
+# shellcheck disable=SC2155
+readonly privileged=$( [ -b /dev/loop0 ] && echo "true" || echo "false" )
+if [ "$privileged" = "true" ]; then
+  until docker info >/dev/null 2>&1; do
     echo "Waiting for Docker daemon to be ready..."
     sleep 1
-done
+  done
+fi
 
 echo
 echo "Runner powered by Sprinters"

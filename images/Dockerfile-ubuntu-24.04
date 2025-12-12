@@ -1,6 +1,6 @@
 FROM ubuntu:24.04 AS build
 
-ARG RUNNER_IMAGE_VERSION=20251126.144
+ARG RUNNER_IMAGE_VERSION=20251208.163
 ARG ARM64=false
 ARG MINIMAL=false
 ARG SLIM=false
@@ -12,8 +12,11 @@ WORKDIR /tmp
 
 RUN --mount=source=ubuntu-24.04/build-as-runner.sh,target=/build-as-runner.sh /build-as-runner.sh $RUNNER_IMAGE_VERSION $ARM64 $MINIMAL $SLIM
 
+RUN --mount=source=common/setup-agent.sh,target=/setup-agent.sh /setup-agent.sh
+
 COPY --chmod=555 common/entrypoint.sh /entrypoint.sh
 COPY --chmod=555 common/start-docker.sh /start-docker.sh
+COPY --chmod=555 common/start-agent.sh /start-agent.sh
 COPY --chmod=555 common/job-started.sh /job-started.sh
 COPY --chmod=555 common/job-completed.sh /job-completed.sh
 COPY --chmod=555 common/publish-event.sh /publish-event.sh
@@ -28,10 +31,9 @@ ENV ACTIONS_RUNNER_PRINT_LOG_TO_STDOUT=1
 ENV ImageOS=ubuntu24
 ENV ACTIONS_RUNNER_HOOK_JOB_STARTED=/job-started.sh
 ENV ACTIONS_RUNNER_HOOK_JOB_COMPLETED=/job-completed.sh
-ENV SPRINTERS_RUNNER_WEBHOOK=https://console.sprinters.sh/runner/webhook
 
 LABEL org.opencontainers.image.source=https://github.com/sprinters-sh/sprinters-images
-LABEL org.opencontainers.image.description="sprinters.sh GitHub Actions runner"
+LABEL org.opencontainers.image.description="Sprinters GitHub Actions runner"
 LABEL org.opencontainers.image.licenses=MIT
 LABEL sh.sprinters.runner-image.version=$RUNNER_IMAGE_VERSION
 
