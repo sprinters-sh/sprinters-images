@@ -105,8 +105,6 @@ else
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-actions-cache.sh
 fi
 
-sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-runner-package.sh
-
 if [ "$MINIMAL" != "true" ]; then
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-apt-common.sh
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-azcopy.sh
