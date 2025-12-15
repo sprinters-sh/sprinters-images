@@ -13,9 +13,11 @@ WORKDIR /tmp
 RUN --mount=source=ubuntu-22.04/build-as-runner.sh,target=/build-as-runner.sh /build-as-runner.sh $RUNNER_IMAGE_VERSION $ARM64 $MINIMAL $SLIM
 
 RUN --mount=source=common/setup-agent.sh,target=/setup-agent.sh /setup-agent.sh
+RUN --mount=source=common/setup-runner.sh,target=/setup-runner.sh /setup-runner.sh
 
 COPY --chmod=555 common/entrypoint.sh /entrypoint.sh
 COPY --chmod=555 common/start-docker.sh /start-docker.sh
+COPY --chmod=555 common/start-agent.sh /start-agent.sh
 COPY --chmod=555 common/job-started.sh /job-started.sh
 COPY --chmod=555 common/job-completed.sh /job-completed.sh
 COPY --chmod=555 common/publish-event.sh /publish-event.sh

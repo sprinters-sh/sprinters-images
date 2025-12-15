@@ -11,6 +11,10 @@ else
 fi
 readonly agent_download_url=https://github.com/sprinters-sh/sprinters-agent/releases/download/$agent_version/sprinters-agent-$agent_version-$agent_arch.tar.gz
 
-sudo mkdir -p /sprinters-agent
-sudo wget "$agent_download_url" -O /sprinters-agent.tar.gz
-sudo tar -xvzf /sprinters-agent.tar.gz -C /sprinters-agent
+readonly dest=/sprinters-agent
+readonly archive=/sprinters-agent.tar.gz
+
+sudo mkdir -p $dest
+sudo wget "$agent_download_url" -O $archive
+sudo tar -xvzf $archive -C $dest
+sudo rm $archive
