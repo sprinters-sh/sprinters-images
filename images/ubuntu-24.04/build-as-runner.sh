@@ -2,6 +2,7 @@
 
 # Fail-fast
 set -euo pipefail
+trap 'echo "Error in ${BASH_SOURCE[0]}:${LINENO} -> $BASH_COMMAND"' ERR
 
 readonly RUNNER_IMAGE_VERSION=$1
 readonly ARM64=$2
