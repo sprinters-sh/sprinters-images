@@ -4,8 +4,6 @@
 set -euo pipefail
 trap 'echo "Error in ${BASH_SOURCE[0]}:${LINENO} -> $BASH_COMMAND"' ERR
 
-rm abc
-
 readonly IMAGE_FOLDER=/imagegeneration
 
 # Install base packages required by GitHub's Runner Image scripts
