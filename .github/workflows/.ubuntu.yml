@@ -64,6 +64,7 @@ jobs:
             MINIMAL=${{ inputs.minimal }}
             SLIM=${{ inputs.slim }}
           platforms: ${{ inputs.arm64 && 'linux/arm64' || 'linux/amd64' }}
+          load: true
           push: true
           tags: |
             ghcr.io/sprinters-sh/${{ env.DOCKER_IMAGE }}:latest
