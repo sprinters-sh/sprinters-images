@@ -30,7 +30,7 @@ jobs:
       DOCKER_IMAGE: sprinters-images-ubuntu-${{ inputs.ubuntu-version }}${{ inputs.arm64 && '-arm' || '' }}${{ inputs.minimal && '-minimal' || '' }}${{ inputs.slim && '-slim' || '' }}
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
