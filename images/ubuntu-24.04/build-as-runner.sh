@@ -289,6 +289,10 @@ if [ "$MINIMAL" != "true" ]; then
   # pwsh -File ${IMAGE_FOLDER}/tests/RunAll-Tests.ps1 -OutputDirectory ${IMAGE_FOLDER}
 fi
 
+if [ "$MINIMAL" = "true" ]; then
+  # Create Ruby directory as configure-system.sh needs it
+  mkdir /opt/hostedtoolcache/Ruby
+fi
 sed -i 's,sed -i,echo disabled #sed -i,g' "${PATH_ROOT}"/../scripts/build/configure-system.sh \
     && sudo -E sh -c "${PATH_ROOT}"/../scripts/build/configure-system.sh
 
