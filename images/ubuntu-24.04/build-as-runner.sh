@@ -254,6 +254,7 @@ fi
 
 # Prevent Docker startup and skip tests due to Docker <-> VM differences
 sed -i 's,docker info,#docker info,g' "${PATH_ROOT}"/../scripts/build/install-docker.sh \
+    && sed -i 's,docker pull,echo docker pull,g' "${PATH_ROOT}"/../scripts/build/install-docker.sh \
     && sed -i 's,invoke_tests,echo Skipping tests #invoke_tests,g' "${PATH_ROOT}"/../scripts/build/install-docker.sh \
     && DOCKERHUB_PULL_IMAGES=no sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-docker.sh
 

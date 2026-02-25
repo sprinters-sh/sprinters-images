@@ -1,6 +1,7 @@
 FROM ubuntu:22.04 AS build
 
 ARG RUNNER_IMAGE_VERSION=20260224.45
+ARG RUNNER_VERSION=2.332.0
 ARG ARM64=false
 ARG MINIMAL=false
 ARG SLIM=false
@@ -13,7 +14,7 @@ WORKDIR /tmp
 RUN --mount=source=ubuntu-22.04/build-as-runner.sh,target=/build-as-runner.sh /build-as-runner.sh $RUNNER_IMAGE_VERSION $ARM64 $MINIMAL $SLIM
 
 RUN --mount=source=common/setup-agent.sh,target=/setup-agent.sh /setup-agent.sh
-RUN --mount=source=common/setup-runner.sh,target=/setup-runner.sh /setup-runner.sh
+RUN --mount=source=common/setup-runner.sh,target=/setup-runner.sh /setup-runner.sh $RUNNER_VERSION
 
 COPY --chmod=555 common/entrypoint.sh /entrypoint.sh
 COPY --chmod=555 common/start-docker.sh /start-docker.sh
@@ -25,6 +26,7 @@ COPY --chmod=555 common/publish-event.sh /publish-event.sh
 FROM scratch AS image
 
 ARG RUNNER_IMAGE_VERSION
+ARG RUNNER_VERSION
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV RUNNER_MANUALLY_TRAP_SIG=1
@@ -37,6 +39,7 @@ LABEL org.opencontainers.image.source=https://github.com/sprinters-sh/sprinters-
 LABEL org.opencontainers.image.description="Sprinters GitHub Actions runner"
 LABEL org.opencontainers.image.licenses=MIT
 LABEL sh.sprinters.runner-image.version=$RUNNER_IMAGE_VERSION
+LABEL sh.sprinters.runner.version=$RUNNER_VERSION
 
 COPY --from=build / /
 

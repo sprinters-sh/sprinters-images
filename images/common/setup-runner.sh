@@ -3,7 +3,7 @@
 # Fail-fast
 set -euo pipefail
 
-readonly runner_version=2.330.0
+readonly runner_version=$1
 if [ "$ARM64" = "true" ]; then
     runner_arch="arm64"
 else
