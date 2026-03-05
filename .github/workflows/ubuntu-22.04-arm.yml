@@ -3,6 +3,7 @@ name: ubuntu-22.04-arm
 on:
   push:
     paths-ignore:
+      - .github/workflows/*.yml
       - images/*.cmd
       - README.md
       - LICENSE

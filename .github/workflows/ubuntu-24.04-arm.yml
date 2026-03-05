@@ -3,6 +3,7 @@ name: ubuntu-24.04-arm
 on:
   push:
     paths-ignore:
+      - .github/workflows/*.yml
       - images/*.cmd
       - README.md
       - LICENSE

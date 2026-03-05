@@ -3,6 +3,7 @@ name: ubuntu-24.04-slim
 on:
   push:
     paths-ignore:
+      - .github/workflows/*.yml
       - images/*.cmd
       - README.md
       - LICENSE
@@ -15,4 +16,4 @@ jobs:
       arm64: false
       minimal: false
       slim: true
-      instance: m6id.xlarge:ubuntu-24.04-minimal
+      instance: m8id.xlarge:ubuntu-24.04-minimal
