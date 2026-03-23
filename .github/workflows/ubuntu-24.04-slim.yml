@@ -1,6 +1,7 @@
 name: ubuntu-24.04-slim
 
 on:
+  workflow_dispatch:
   push:
     paths-ignore:
       - .github/workflows/*.yml

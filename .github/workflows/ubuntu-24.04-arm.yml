@@ -1,6 +1,7 @@
 name: ubuntu-24.04-arm
 
 on:
+  workflow_dispatch:
   push:
     paths-ignore:
       - .github/workflows/*.yml
