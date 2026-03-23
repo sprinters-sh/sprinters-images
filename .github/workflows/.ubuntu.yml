@@ -22,7 +22,7 @@ on:
 jobs:
   build:
     runs-on:
-      - sprinters:aws:${{ inputs.instance }}:spot=auto
+      - sprinters:aws:${{ inputs.instance }}:spot=rerun
       - ${{ github.run_id }}-${{ github.run_attempt }}-build-${{ inputs.docker-image }}
 
     env:

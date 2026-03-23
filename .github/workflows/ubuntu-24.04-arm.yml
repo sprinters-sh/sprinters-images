@@ -4,6 +4,8 @@ on:
   push:
     paths-ignore:
       - .github/workflows/*.yml
+      - images/Dockerfile-ubuntu-22.04
+      - images/ubuntu-22.04/*.sh
       - images/*.cmd
       - README.md
       - LICENSE
