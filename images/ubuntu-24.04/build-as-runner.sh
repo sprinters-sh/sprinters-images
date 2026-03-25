@@ -301,3 +301,6 @@ sudo -E tar xzf /opt/runner-cache/actions-runner-linux-*.tar.gz -C /home/runner 
     && sudo -E sh -c "rm -Rf /opt/runner-cache"
 
 sudo -E sh -c "${PATH_ROOT}"/../scripts/build/cleanup.sh
+
+# Ensure correct permissions in /home/runner
+sudo -E sh -c "chown -hR runner:runner /home/runner"

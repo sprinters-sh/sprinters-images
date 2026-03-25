@@ -340,3 +340,6 @@ sudo -E sh -c "${PATH_ROOT}"/../scripts/build/cleanup.sh
 
 sudo -E sh -c "rm -Rf ${PATH_ROOT}"
 sudo -E sh -c "rm -Rf /tmp/*"
+
+# Ensure correct permissions in /home/runner
+sudo -E sh -c "chown -hR runner:runner /home/runner"
