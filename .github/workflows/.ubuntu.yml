@@ -54,13 +54,12 @@ jobs:
       # Should be changed to build, smoke-test, push once this is resolved:
       # https://github.com/docker/build-push-action/issues/1387
       - name: Build and push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: images
           file: ${{ env.DOCKERFILE_NAME }}
           build-args: |
             RUNNER_IMAGE_VERSION=${{ env.VERSION }}
-            ARM64=${{ inputs.arm64 }}
             MINIMAL=${{ inputs.minimal }}
             SLIM=${{ inputs.slim }}
           platforms: ${{ inputs.arm64 && 'linux/arm64' || 'linux/amd64' }}

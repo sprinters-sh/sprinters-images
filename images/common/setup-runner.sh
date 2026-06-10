@@ -4,6 +4,7 @@
 set -euo pipefail
 
 readonly runner_version=$1
+readonly ARM64=$([ "$(uname -m)" = "aarch64" ] && echo "true")
 if [ "$ARM64" = "true" ]; then
     runner_arch="arm64"
 else

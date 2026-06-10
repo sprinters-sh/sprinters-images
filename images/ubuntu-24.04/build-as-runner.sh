@@ -5,9 +5,9 @@ set -euo pipefail
 trap 'echo "Error in ${BASH_SOURCE[0]}:${LINENO} -> $BASH_COMMAND"' ERR
 
 readonly RUNNER_IMAGE_VERSION=$1
-readonly ARM64=$2
-readonly MINIMAL=$3
-readonly SLIM=$4
+readonly MINIMAL=$2
+readonly SLIM=$3
+readonly ARM64=$([ "$(uname -m)" = "aarch64" ] && echo "true" || echo "false")
 
 readonly ImageOS=ubuntu24
 readonly PATH_ROOT=runner-images-$ImageOS-${RUNNER_IMAGE_VERSION}/images/ubuntu/templates
@@ -25,17 +25,6 @@ export HELPER_SCRIPTS=${HELPER_SCRIPT_FOLDER}
 curl -f -L -o runner-image.tar.gz https://github.com/actions/runner-images/archive/refs/tags/$ImageOS/"${RUNNER_IMAGE_VERSION}".tar.gz \
     && tar xzf ./runner-image.tar.gz \
     && rm runner-image.tar.gz
-
-if [ "$ARM64" = "true" ]; then
-  # Patch arch references: amd64|x86_64|x64 -> arm64
-  grep -rl --include="*.ps1" --include="*.sh" --include="*.json" 'amd64' . | xargs sed -i 's/amd64/arm64/g'
-  grep -rl --include="*.json" 'x86_64' . | xargs sed -i 's/x86_64/aarch64/g'
-  grep -rl --include="*.ps1" --include="*.sh" 'x86_64' . | xargs sed -i 's/x86_64/arm64/g'
-  grep -rl --include="*.ps1" --include="*.sh" --include="*.json" 'x64' . | xargs sed -i 's/x64/arm64/g'
-
-  # Skip tests due to lack of powershell on Linux arm64
-  grep -rl --include="*.sh" 'invoke_tests ' . | xargs sed -i 's,invoke_tests ,echo Skipping tests #invoke_tests ,g'
-fi
 
 chmod +x "${PATH_ROOT}"/../scripts/build/*.sh
 
@@ -94,15 +83,9 @@ if [ "$MINIMAL" = "true" ]; then
   # Disable tests as they require powershell
   sed -i 's,invoke_tests,echo Disabled tests #invoke_tests,g' "${PATH_ROOT}"/../scripts/build/*.sh
 else
-  if [ "$ARM64" = "true" ]; then
-    # https://learn.microsoft.com/en-us/powershell/scripting/install/powershell-on-arm
-    echo "Disabled powershell as it isn't officially supported by Microsoft on Linux arm64"
-  else
-    sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-powershell.sh
-    sudo -E sh -c "pwsh -f ${PATH_ROOT}/../scripts/build/Install-PowerShellModules.ps1"
-    sudo -E sh -c "pwsh -f ${PATH_ROOT}/../scripts/build/Install-PowerShellAzModules.ps1"
-  fi
-
+  sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-powershell.sh
+  sudo -E sh -c "pwsh -f ${PATH_ROOT}/../scripts/build/Install-PowerShellModules.ps1"
+  sudo -E sh -c "pwsh -f ${PATH_ROOT}/../scripts/build/Install-PowerShellAzModules.ps1"
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-actions-cache.sh
 fi
 
@@ -118,20 +101,9 @@ if [ "$MINIMAL" != "true" ]; then
   fi
 
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-apache.sh
-
-  if [ "$ARM64" = "true" ]; then
-    # Fix arm64 arch name
-    sed -i 's,awscli-exe-linux-arm64,awscli-exe-linux-aarch64,g' "${PATH_ROOT}"/../scripts/build/install-aws-tools.sh
-  fi
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-aws-tools.sh
-
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-clang.sh
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-swift.sh
-
-  if [ "$ARM64" = "true" ]; then
-    # Fix arm64 arch name
-    sed -i 's,arm64,aarch64,g' "${PATH_ROOT}"/../scripts/build/install-cmake.sh
-  fi
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-cmake.sh
 
   if [ "$ARM64" != "true" ]; then
@@ -157,10 +129,6 @@ if [ "$MINIMAL" != "true" ]; then
 
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-gcc-compilers.sh
 
-  if [ "$ARM64" = "true" ]; then
-    # Fix arm64 arch name
-    sed -i 's,linuarm64,linux-aarch64,g' "${PATH_ROOT}"/../scripts/build/install-firefox.sh
-  fi
   # Skip tests due to Docker <-> VM differences
   sed -i 's,invoke_tests,#invoke_tests,g' "${PATH_ROOT}"/../scripts/build/install-firefox.sh \
       && sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-firefox.sh
@@ -225,13 +193,7 @@ if [ "$MINIMAL" != "true" ]; then
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-selenium.sh
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-packer.sh
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-vcpkg.sh
-
-  if [ "$ARM64" = "true" ]; then
-    # Disabled libicu70 download as it isn't available for arm
-    sed -i 's,is_ubuntu24,false,g' "${PATH_ROOT}"/../scripts/build/configure-dpkg.sh
-  fi
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/configure-dpkg.sh
-
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-yq.sh
 
   if [ "$ARM64" != "true" ]; then
@@ -262,19 +224,10 @@ sed -i 's,docker info,#docker info,g' "${PATH_ROOT}"/../scripts/build/install-do
 sudo -E sh -c "usermod -aG docker runner"
 
 if [ "$MINIMAL" != "true" ]; then
-  if [ "$ARM64" != "true" ]; then
-    # Disabled powershell as it isn't officially supported by Microsoft on Linux arm64
-    # https://learn.microsoft.com/en-us/powershell/scripting/install/powershell-on-arm
-    sudo -E sh -c "pwsh -f ${PATH_ROOT}/../scripts/build/Install-Toolset.ps1"
-    sudo -E sh -c "pwsh -f ${PATH_ROOT}/../scripts/build/Configure-Toolset.ps1"
-  fi
-
+  sudo -E sh -c "pwsh -f ${PATH_ROOT}/../scripts/build/Install-Toolset.ps1"
+  sudo -E sh -c "pwsh -f ${PATH_ROOT}/../scripts/build/Configure-Toolset.ps1"
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-pipx-packages.sh
-
-  if [ "$ARM64" != "true" ]; then
-    # Not in arm images
-    sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-homebrew.sh
-  fi
+  sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-homebrew.sh
 
   ## Skip tests due to lack of systemd
   sed -i 's,snap set,#snap set,g' "${PATH_ROOT}"/../scripts/build/configure-snap.sh \
