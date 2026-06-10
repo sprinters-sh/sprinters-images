@@ -253,7 +253,9 @@ sudo -E sh -c "usermod -aG docker runner"
 
 if [ "$MINIMAL" != "true" ]; then
   sudo -E sh -c "pwsh -f ${PATH_ROOT}/../scripts/build/Install-Toolset.ps1"
-  sudo -E sh -c "pwsh -f ${PATH_ROOT}/../scripts/build/Configure-Toolset.ps1"
+  if [ "$ARM64" != "true" ]; then
+    sudo -E sh -c "pwsh -f ${PATH_ROOT}/../scripts/build/Configure-Toolset.ps1"
+  fi
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-pipx-packages.sh
   sudo -E sh -c "${PATH_ROOT}"/../scripts/build/install-homebrew.sh
 
