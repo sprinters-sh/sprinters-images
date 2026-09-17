@@ -30,7 +30,7 @@ jobs:
       DOCKER_IMAGE: sprinters-images-ubuntu-${{ inputs.ubuntu-version }}${{ inputs.arm64 && '-arm' || '' }}${{ inputs.minimal && '-minimal' || '' }}${{ inputs.slim && '-slim' || '' }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
@@ -47,7 +47,11 @@ jobs:
 
       - name: Extract version from Dockerfile
         run: |
-          VERSION=$(grep 'ARG RUNNER_IMAGE_VERSION=' "$DOCKERFILE_NAME" | cut -d '=' -f2)
+          VERSION_ARG=RUNNER_IMAGE_VERSION
+          if [ "${{ inputs.arm64 }}" = "true" ]; then
+            VERSION_ARG=RUNNER_IMAGE_VERSION_ARM64
+          fi
+          VERSION=$(grep "^ARG ${VERSION_ARG}=" "$DOCKERFILE_NAME" | cut -d '=' -f2)
           echo "RUNNER_IMAGE_VERSION: ${VERSION}"
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
 

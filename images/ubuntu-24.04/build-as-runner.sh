@@ -10,7 +10,9 @@ readonly SLIM=$3
 readonly ARM64=$([ "$(uname -m)" = "aarch64" ] && echo "true" || echo "false")
 
 readonly ImageOS=ubuntu24
-readonly PATH_ROOT=runner-images-$ImageOS-${RUNNER_IMAGE_VERSION}/images/ubuntu/templates
+readonly ARCH_SUFFIX=$([ "$ARM64" = "true" ] && echo "-arm64" || echo "")
+readonly IMAGE_TAG=${ImageOS}${ARCH_SUFFIX}
+readonly PATH_ROOT=runner-images-${IMAGE_TAG}-${RUNNER_IMAGE_VERSION}/images/ubuntu/templates
 
 export IMAGE_VERSION=${RUNNER_IMAGE_VERSION}
 export IMAGE_OS=$ImageOS
@@ -22,9 +24,9 @@ export INSTALLER_SCRIPT_FOLDER=/imagegeneration/installers
 export HELPER_SCRIPT_FOLDER=/imagegeneration/helpers
 export HELPER_SCRIPTS=${HELPER_SCRIPT_FOLDER}
 
-curl -f -L -o runner-image.tar.gz https://github.com/actions/runner-images/archive/refs/tags/$ImageOS/"${RUNNER_IMAGE_VERSION}".tar.gz \
-    && tar xzf ./runner-image.tar.gz \
-    && rm runner-image.tar.gz
+curl -f -L -o runner-image.tar.gz "https://github.com/actions/runner-images/archive/refs/tags/${IMAGE_TAG}/${RUNNER_IMAGE_VERSION}.tar.gz"
+tar xzf ./runner-image.tar.gz
+rm runner-image.tar.gz
 
 chmod +x "${PATH_ROOT}"/../scripts/build/*.sh
 
@@ -51,9 +53,9 @@ fi
 
 if [ "$SLIM" = "true" ]; then
   # Remove Android and CodeQL from toolset as they aren't included in the slim images
-  jq -M -C 'del(.android) | .toolcache = (.toolcache | map(select(.name != "CodeQL")))' "${PATH_ROOT}"/../toolsets/toolset-2404.json > ${INSTALLER_SCRIPT_FOLDER}/toolset.json
+  jq -M -C 'del(.android) | .toolcache = (.toolcache | map(select(.name != "CodeQL")))' "${PATH_ROOT}/../toolsets/toolset-2404${ARCH_SUFFIX}.json" > ${INSTALLER_SCRIPT_FOLDER}/toolset.json
 else
-  cp "${PATH_ROOT}"/../toolsets/toolset-2404.json ${INSTALLER_SCRIPT_FOLDER}/toolset.json
+  cp "${PATH_ROOT}/../toolsets/toolset-2404${ARCH_SUFFIX}.json" ${INSTALLER_SCRIPT_FOLDER}/toolset.json
 fi
 
 if [ "$MINIMAL" != "true" ]; then
@@ -245,10 +247,6 @@ if [ "$MINIMAL" = "true" ]; then
 fi
 sed -i 's,sed -i,echo disabled #sed -i,g' "${PATH_ROOT}"/../scripts/build/configure-system.sh \
     && sudo -E sh -c "${PATH_ROOT}"/../scripts/build/configure-system.sh
-
-# Extract runner to get it ready to use
-sudo -E tar xzf /opt/runner-cache/actions-runner-linux-*.tar.gz -C /home/runner \
-    && sudo -E sh -c "rm -Rf /opt/runner-cache"
 
 sudo -E sh -c "${PATH_ROOT}"/../scripts/build/cleanup.sh
 
