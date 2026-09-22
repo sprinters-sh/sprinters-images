@@ -1,22 +1,22 @@
-name: ubuntu-22.04
+name: ubuntu-26.04-arm-minimal
 
 on:
   workflow_dispatch:
   push:
     paths-ignore:
       - .github/workflows/*.yml
+      - images/Dockerfile-ubuntu-22.04
       - images/Dockerfile-ubuntu-24.04
-      - images/Dockerfile-ubuntu-26.04
       - images/*.cmd
       - README.md
       - LICENSE
 
 jobs:
-  ubuntu-2204:
+  ubuntu-2604-arm-minimal:
     uses: ./.github/workflows/.ubuntu.yml
     with:
-      ubuntu-version: 22.04
-      arm64: false
-      minimal: false
+      ubuntu-version: 26.04
+      arm64: true
+      minimal: true
       slim: false
-      instance: m8id.xlarge:ubuntu-24.04-minimal
+      instance: r8gd.large:ubuntu-24.04-arm-minimal:ap-south-1

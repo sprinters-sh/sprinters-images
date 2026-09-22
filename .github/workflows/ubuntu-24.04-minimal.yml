@@ -6,7 +6,7 @@ on:
     paths-ignore:
       - .github/workflows/*.yml
       - images/Dockerfile-ubuntu-22.04
-      - images/ubuntu-22.04/*.sh
+      - images/Dockerfile-ubuntu-26.04
       - images/*.cmd
       - README.md
       - LICENSE

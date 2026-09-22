@@ -1,11 +1,11 @@
-ARG RUNNER_IMAGE_VERSION=20260920.303
+ARG RUNNER_IMAGE_VERSION=20260920.143
 # ARM64 launchers and CI pass this pin as RUNNER_IMAGE_VERSION.
-ARG RUNNER_IMAGE_VERSION_ARM64=20260920.137
+ARG RUNNER_IMAGE_VERSION_ARM64=20260920.129
 ARG RUNNER_VERSION=2.337.0
 ARG MINIMAL=false
 ARG SLIM=false
 
-FROM ubuntu:22.04 AS base
+FROM ubuntu:26.04 AS base
 
 ARG RUNNER_IMAGE_VERSION
 ARG MINIMAL
@@ -41,24 +41,11 @@ RUN --mount=source=build,target=/build /build/tool.sh codeql
 FROM prepared AS copilot-cli
 RUN --mount=source=build,target=/build /build/tool.sh copilot-cli
 
-FROM prepared AS julia
-RUN --mount=source=build,target=/build /build/tool.sh julia
-
-FROM prepared AS miniconda
-RUN --mount=source=build,target=/build /build/tool.sh miniconda
-
 FROM prepared AS packer
 RUN --mount=source=build,target=/build /build/tool.sh packer
 
-FROM prepared AS pulumi
-RUN --mount=source=build,target=/build /build/tool.sh pulumi
-
 FROM prepared AS pypy
 RUN --mount=source=build,target=/build /build/tool.sh pypy
-
-# Swift needs libraries that packages installed by "system-1" depend on
-FROM system-1 AS swift
-RUN --mount=source=build,target=/build /build/tool.sh swift
 
 FROM prepared AS yq
 RUN --mount=source=build,target=/build /build/tool.sh yq
@@ -77,34 +64,18 @@ FROM java AS android
 RUN --mount=source=build,target=/build --mount=from=yq,target=/leaves/yq /build/merge.sh
 RUN --mount=source=build,target=/build /build/tool.sh android
 
-FROM prepared AS oras-cli
-RUN --mount=source=build,target=/build /build/tool.sh oras-cli
-
-FROM prepared AS terraform
-RUN --mount=source=build,target=/build /build/tool.sh terraform
-
-FROM java AS sbt
-RUN --mount=source=build,target=/build /build/tool.sh sbt
-
 FROM system-2 AS build
 RUN --mount=source=build,target=/build \
     --mount=from=awf,target=/leaves/awf \
     --mount=from=codeql,target=/leaves/codeql \
     --mount=from=copilot-cli,target=/leaves/copilot-cli \
-    --mount=from=julia,target=/leaves/julia \
-    --mount=from=miniconda,target=/leaves/miniconda \
     --mount=from=packer,target=/leaves/packer \
-    --mount=from=pulumi,target=/leaves/pulumi \
     --mount=from=pypy,target=/leaves/pypy \
-    --mount=from=swift,target=/leaves/swift \
     --mount=from=yq,target=/leaves/yq \
     --mount=from=ninja,target=/leaves/ninja \
     --mount=from=kotlin,target=/leaves/kotlin \
     --mount=from=selenium,target=/leaves/selenium \
     --mount=from=android,target=/leaves/android \
-    --mount=from=oras-cli,target=/leaves/oras-cli \
-    --mount=from=terraform,target=/leaves/terraform \
-    --mount=from=sbt,target=/leaves/sbt \
     /build/merge.sh
 RUN --mount=source=build,target=/build /build/toolcache.sh
 RUN --mount=source=build,target=/build /build/finalize.sh
@@ -128,7 +99,7 @@ ARG RUNNER_VERSION
 ENV DEBIAN_FRONTEND=noninteractive
 ENV RUNNER_MANUALLY_TRAP_SIG=1
 ENV ACTIONS_RUNNER_PRINT_LOG_TO_STDOUT=1
-ENV ImageOS=ubuntu22
+ENV ImageOS=ubuntu26
 ENV ACTIONS_RUNNER_HOOK_JOB_STARTED=/job-started.sh
 ENV ACTIONS_RUNNER_HOOK_JOB_COMPLETED=/job-completed.sh
 

@@ -1,21 +1,21 @@
-name: ubuntu-22.04
+name: ubuntu-26.04
 
 on:
   workflow_dispatch:
   push:
     paths-ignore:
       - .github/workflows/*.yml
+      - images/Dockerfile-ubuntu-22.04
       - images/Dockerfile-ubuntu-24.04
-      - images/Dockerfile-ubuntu-26.04
       - images/*.cmd
       - README.md
       - LICENSE
 
 jobs:
-  ubuntu-2204:
+  ubuntu-2604:
     uses: ./.github/workflows/.ubuntu.yml
     with:
-      ubuntu-version: 22.04
+      ubuntu-version: 26.04
       arm64: false
       minimal: false
       slim: false

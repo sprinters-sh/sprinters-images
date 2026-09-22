@@ -4,7 +4,9 @@
 #
 # name        installer                skipped when (minimal, slim, arm64)
 android       install-android-sdk.sh   minimal slim arm64
+awf           install-awf.sh           minimal
 codeql        install-codeql-bundle.sh minimal slim arm64
+copilot-cli   install-copilot-cli.sh   minimal
 julia         install-julia.sh         minimal slim arm64
 kotlin        install-kotlin.sh        minimal
 miniconda     install-miniconda.sh     minimal arm64

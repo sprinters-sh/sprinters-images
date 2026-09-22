@@ -3,6 +3,16 @@ Sprinters Docker images
 
 ## Images
 
+### Ubuntu 26.04
+
+#### x64
+- [`ubuntu-26.04`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-26.04)
+- [`ubuntu-26.04-minimal`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-26.04-minimal)
+
+#### arm64
+- [`ubuntu-26.04-arm`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-26.04-arm)
+- [`ubuntu-26.04-arm-minimal`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-26.04-arm-minimal)
+
 ### Ubuntu 24.04
 
 #### x64

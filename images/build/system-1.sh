@@ -61,6 +61,12 @@ if [ "$MINIMAL" != "true" ]; then
   if [ "$ARM64" != "true" ]; then
     # Not in arm images
     upstream install-google-chrome.sh
+  fi
+
+  upstream install-google-cloud-cli.sh
+
+  if [ "$ARM64" != "true" ]; then
+    # Not in arm images
     if [ "$SLIM" != "true" ]; then
       upstream install-haskell.sh
     fi

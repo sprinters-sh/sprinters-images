@@ -6,7 +6,7 @@ on:
     paths-ignore:
       - .github/workflows/*.yml
       - images/Dockerfile-ubuntu-22.04
-      - images/ubuntu-22.04/*.sh
+      - images/Dockerfile-ubuntu-26.04
       - images/*.cmd
       - README.md
       - LICENSE
@@ -19,4 +19,4 @@ jobs:
       arm64: true
       minimal: true
       slim: false
-      instance: r7gd.large:ubuntu-24.04-arm-minimal:ap-south-1
+      instance: r8gd.large:ubuntu-24.04-arm-minimal:ap-south-1
