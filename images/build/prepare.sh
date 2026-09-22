@@ -77,5 +77,10 @@ else
   sudo -E pwsh -f "${SCRIPTS}/Install-PowerShellModules.ps1"
   sudo -E pwsh -f "${SCRIPTS}/Install-PowerShellAzModules.ps1"
   upstream install-actions-cache.sh
+
+  # Skip tests due to Docker <-> VM differences: configure-apt-sources.sh rewrites the Azure mirror
+  # URL to a mirror+file: reference, but our base image's sources.list points at archive.ubuntu.com
+  # directly and never had that URL, so the rewrite is a no-op and apt still works fine untouched.
+  skip_tests install-apt-common.sh
   upstream install-apt-common.sh
 fi

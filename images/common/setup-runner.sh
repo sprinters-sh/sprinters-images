@@ -19,3 +19,8 @@ sudo mkdir -p $dest
 sudo wget "$agent_download_url" -O $archive
 sudo tar -xvzf $archive -C $dest
 sudo rm $archive
+
+# Install the runner's .NET runtime dependencies (e.g. libicu), which aren't necessarily pulled in
+# by the packages installed elsewhere, especially in minimal images. installdependencies.sh probes
+# for the right package names itself, so this stays correct across Ubuntu versions.
+sudo $dest/bin/installdependencies.sh

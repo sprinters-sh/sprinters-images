@@ -10,11 +10,14 @@ readonly IMAGE_FOLDER=/imagegeneration
 apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates git curl wget sudo gnupg lsb-release openssl software-properties-common apt-utils snap netcat-traditional bc lshw gawk iptables ssh pigz
 
-# Disable systemctl and journalctl by aliasing them to a dummy echo
-rm /usr/bin/systemctl \
-    && ln -s /usr/bin/echo /usr/bin/systemctl \
-    && rm /usr/bin/journalctl \
-    && ln -s /usr/bin/echo /usr/bin/journalctl
+# Disable systemctl and journalctl by replacing them with a no-op script. A symlink to /usr/bin/echo
+# doesn't work on Ubuntu 26.04+, where echo is a multi-call uutils-coreutils binary that dispatches
+# on argv[0] and doesn't recognize being invoked as systemctl/journalctl.
+for cmd in systemctl journalctl; do
+  rm /usr/bin/$cmd
+  printf '#!/bin/sh\nexit 0\n' > /usr/bin/$cmd
+  chmod +x /usr/bin/$cmd
+done
 
 # Fine-tune environment to match GitHub image
 mkdir /etc/cloud/templates && touch /.dockerenv
