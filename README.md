@@ -25,6 +25,24 @@ Sprinters Docker images
 - [`ubuntu-22.04-arm`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-22.04-arm)
 - [`ubuntu-22.04-arm-minimal`](https://github.com/sprinters-sh/sprinters-images/pkgs/container/sprinters-images-ubuntu-22.04-arm-minimal)
 
+## Build structure
+
+Both Dockerfiles run the scripts in [`images/build`](images/build), which wrap GitHub's
+[runner-images](https://github.com/actions/runner-images) scripts, and are split into stages that BuildKit builds in parallel:
+
+- `prepared`, `system-1`, `java` and `system-2` install everything that changes shared state, such as packages, users and
+  profiles. They must run one after another, in the order of GitHub's runner images.
+- One stage per self-contained tool (Android SDK, CodeQL, PyPy, ...) installs it in isolation with `tool.sh`. Each tool
+  is listed in [`tools.txt`](images/build/tools.txt), together with the image variants that exclude it.
+- `build` merges the tools into the image with `merge.sh`, installs the toolcache, and finalizes and cleans up.
+
+`tool.sh` exports what an installer added, and fails the build if it did more than adding files below `/usr` and `/opt`
+or setting environment variables (apart from `PATH`). Such installers belong in one of the `system` stages.
+
+To add a tool, list it in `tools.txt`, add a stage that runs `tool.sh <name>` to the Dockerfiles, and mount that stage
+in the `build` stage. A single stage can be built with `--target`, for example
+`docker build -f images/Dockerfile-ubuntu-24.04 --target pypy images`.
+
 ## License
 MIT License
 

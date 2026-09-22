@@ -1,0 +1,20 @@
+# Tools that are installed in isolation by tool.sh and merged into the image afterwards.
+# Only tools that download a self-contained release, and have no impact on anything else, can be listed here.
+# Their position in the build must not matter either, see system-1.sh.
+#
+# name        installer                skipped when (minimal, slim, arm64)
+android       install-android-sdk.sh   minimal slim arm64
+codeql        install-codeql-bundle.sh minimal slim arm64
+julia         install-julia.sh         minimal slim arm64
+kotlin        install-kotlin.sh        minimal
+miniconda     install-miniconda.sh     minimal arm64
+ninja         install-ninja.sh         minimal
+oras-cli      install-oras-cli.sh      minimal arm64
+packer        install-packer.sh        minimal
+pulumi        install-pulumi.sh        minimal
+pypy          install-pypy.sh          minimal arm64
+sbt           install-sbt.sh           minimal arm64
+selenium      install-selenium.sh      minimal
+swift         install-swift.sh         minimal
+terraform     install-terraform.sh     minimal
+yq            install-yq.sh            minimal

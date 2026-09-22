@@ -1,5 +1,3 @@
-FROM ubuntu:22.04 AS build
-
 ARG RUNNER_IMAGE_VERSION=20260907.292
 # ARM64 launchers and CI pass this pin as RUNNER_IMAGE_VERSION.
 ARG RUNNER_IMAGE_VERSION_ARM64=20260907.126
@@ -7,13 +5,103 @@ ARG RUNNER_VERSION=2.337.0
 ARG MINIMAL=false
 ARG SLIM=false
 
+FROM ubuntu:22.04 AS base
+
+ARG RUNNER_IMAGE_VERSION
+ARG MINIMAL
+ARG SLIM
+ENV RUNNER_IMAGE_VERSION=$RUNNER_IMAGE_VERSION MINIMAL=$MINIMAL SLIM=$SLIM
+
 RUN --mount=source=ubuntu-22.04/setup-as-root.sh,target=/setup-as-root.sh /setup-as-root.sh
 
 USER runner
 WORKDIR /tmp
 
-RUN --mount=source=ubuntu-22.04/build-as-runner.sh,target=/build-as-runner.sh /build-as-runner.sh $RUNNER_IMAGE_VERSION $MINIMAL $SLIM
+# The build is split into stages that BuildKit runs in parallel. Everything that changes shared state, like packages,
+# is installed one after another in "prepared", "system-1", "java" and "system-2". Self-contained tools are installed
+# in isolation in their own stages, and merged into the image in "build".
+FROM base AS prepared
+RUN --mount=source=build,target=/build /build/prepare.sh
 
+FROM prepared AS system-1
+RUN --mount=source=build,target=/build /build/system-1.sh
+
+FROM system-1 AS java
+RUN --mount=source=build,target=/build /build/java.sh
+
+FROM java AS system-2
+RUN --mount=source=build,target=/build /build/system-2.sh
+
+FROM prepared AS codeql
+RUN --mount=source=build,target=/build /build/tool.sh codeql
+
+FROM prepared AS julia
+RUN --mount=source=build,target=/build /build/tool.sh julia
+
+FROM prepared AS miniconda
+RUN --mount=source=build,target=/build /build/tool.sh miniconda
+
+FROM prepared AS packer
+RUN --mount=source=build,target=/build /build/tool.sh packer
+
+FROM prepared AS pulumi
+RUN --mount=source=build,target=/build /build/tool.sh pulumi
+
+FROM prepared AS pypy
+RUN --mount=source=build,target=/build /build/tool.sh pypy
+
+# Swift needs libraries that packages installed by "system-1" depend on
+FROM system-1 AS swift
+RUN --mount=source=build,target=/build /build/tool.sh swift
+
+FROM prepared AS yq
+RUN --mount=source=build,target=/build /build/tool.sh yq
+
+# Ninja needs cmake
+FROM system-1 AS ninja
+RUN --mount=source=build,target=/build /build/tool.sh ninja
+
+FROM java AS kotlin
+RUN --mount=source=build,target=/build /build/tool.sh kotlin
+
+FROM java AS selenium
+RUN --mount=source=build,target=/build /build/tool.sh selenium
+
+FROM java AS android
+RUN --mount=source=build,target=/build --mount=from=yq,target=/leaves/yq /build/merge.sh
+RUN --mount=source=build,target=/build /build/tool.sh android
+
+FROM prepared AS oras-cli
+RUN --mount=source=build,target=/build /build/tool.sh oras-cli
+
+FROM prepared AS terraform
+RUN --mount=source=build,target=/build /build/tool.sh terraform
+
+FROM java AS sbt
+RUN --mount=source=build,target=/build /build/tool.sh sbt
+
+FROM system-2 AS build
+RUN --mount=source=build,target=/build \
+    --mount=from=codeql,target=/leaves/codeql \
+    --mount=from=julia,target=/leaves/julia \
+    --mount=from=miniconda,target=/leaves/miniconda \
+    --mount=from=packer,target=/leaves/packer \
+    --mount=from=pulumi,target=/leaves/pulumi \
+    --mount=from=pypy,target=/leaves/pypy \
+    --mount=from=swift,target=/leaves/swift \
+    --mount=from=yq,target=/leaves/yq \
+    --mount=from=ninja,target=/leaves/ninja \
+    --mount=from=kotlin,target=/leaves/kotlin \
+    --mount=from=selenium,target=/leaves/selenium \
+    --mount=from=android,target=/leaves/android \
+    --mount=from=oras-cli,target=/leaves/oras-cli \
+    --mount=from=terraform,target=/leaves/terraform \
+    --mount=from=sbt,target=/leaves/sbt \
+    /build/merge.sh
+RUN --mount=source=build,target=/build /build/toolcache.sh
+RUN --mount=source=build,target=/build /build/finalize.sh
+
+ARG RUNNER_VERSION
 RUN --mount=source=common/setup-agent.sh,target=/setup-agent.sh /setup-agent.sh
 RUN --mount=source=common/setup-runner.sh,target=/setup-runner.sh /setup-runner.sh $RUNNER_VERSION
 
