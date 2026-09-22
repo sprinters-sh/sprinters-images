@@ -32,6 +32,10 @@ if [ "$MINIMAL" != "true" ]; then
 
   # Skip tests due to Docker <-> VM differences
   skip_tests install-container-tools.sh
+  # On 26.04, the script also reloads podman's network config to work around a netavark/nftables
+  # issue (https://github.com/actions/runner-images/issues/14230); that needs network-namespace
+  # capabilities our build container doesn't have, and there is no podman network to reload yet anyway.
+  sed -i 's,podman network reload --all 2>/dev/null,podman network reload --all 2>/dev/null || true,g' "${SCRIPTS}"/install-container-tools.sh
   upstream install-container-tools.sh
 
   # Make list of extracted sdk archives more specific to prevent accidentally picking up tar.gz files from other tools
