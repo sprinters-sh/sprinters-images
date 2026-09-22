@@ -19,6 +19,10 @@ if [ "$MINIMAL" != "true" ]; then
   upstream configure-apt-sources.sh
 fi
 
+# Real cloud images ship a mirror list that apt's acquire failover reads and this script logs; our
+# container uses the stock archive.ubuntu.com sources directly and has no such file.
+sudo touch /etc/apt/apt-mirrors.txt
+
 upstream configure-apt.sh
 upstream configure-limits.sh
 
@@ -51,12 +55,16 @@ upstream configure-image-data.sh
 # 2. Create a dummy MOTD config file
 # 3. Avoid modifying the real /etc/hosts as Docker prohibits this
 # 4. No need to disable man-db as it is not installed
+# 5. Skip the ext4 rootflags tuning: Docker's root filesystem isn't ext4, and there is no bootloader
+#    to run update-grub against
 sudo touch /etc/waagent.conf \
     && sudo touch /etc/default/motd-news \
     && sed -i 's,/etc/hosts,/etc/hosts0,g' "${SCRIPTS}"/configure-environment.sh \
     && sudo touch /etc/hosts0 \
     && sed -i 's,echo "set man-db/auto-update false",#echo "set man-db/auto-update false",g' "${SCRIPTS}"/configure-environment.sh \
     && sed -i 's,dpkg-reconfigure man-db,#dpkg-reconfigure man-db,g' "${SCRIPTS}"/configure-environment.sh \
+    && sed -i 's,exit 1,true #exit 1,g' "${SCRIPTS}"/configure-environment.sh \
+    && sed -i 's,update-grub,#update-grub,g' "${SCRIPTS}"/configure-environment.sh \
     && upstream configure-environment.sh
 
 upstream install-apt-vital.sh
