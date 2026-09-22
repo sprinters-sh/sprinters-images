@@ -91,6 +91,11 @@ COPY --chmod=555 common/job-started.sh /job-started.sh
 COPY --chmod=555 common/job-completed.sh /job-completed.sh
 COPY --chmod=555 common/publish-event.sh /publish-event.sh
 
+# Quick sanity check ensuring the runner is fully functional
+WORKDIR /home/runner
+ENV HOME=/home/runner
+RUN ./config.sh --version
+
 FROM scratch AS image
 
 ARG RUNNER_IMAGE_VERSION
@@ -114,8 +119,5 @@ COPY --from=build / /
 USER runner
 WORKDIR /home/runner
 ENV HOME=/home/runner
-
-# Quick sanity check ensuring the runner is fully functional
-RUN ./config.sh --version
 
 CMD ["/entrypoint.sh"]

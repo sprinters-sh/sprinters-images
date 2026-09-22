@@ -19,4 +19,4 @@ jobs:
       arm64: true
       minimal: false
       slim: false
-      instance: r8gd.large:ubuntu-24.04-arm-minimal:ap-south-1
+      instance: r8gd.xlarge:ubuntu-24.04-arm-minimal:ap-south-1
