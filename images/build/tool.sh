@@ -81,3 +81,8 @@ sudo cp "$work/environment.new" /artifacts/environment
 
 echo "Exported $(wc -l < "$work/exports") paths of $tool:"
 sed 's/^/  /' "$work/exports"
+
+# Installers don't always clean up their own scratch downloads (e.g. install-codeql-bundle.sh leaves
+# the multi-GB bundle archive in /tmp after extracting it). That's dead weight for this stage's whole
+# lifetime, since nothing under /tmp or /var/tmp is ever exported (see $noise above) - safe to wipe.
+sudo rm -rf /tmp/* /var/tmp/* 2>/dev/null || true
