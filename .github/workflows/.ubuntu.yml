@@ -32,6 +32,13 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      # The disk usage the runner reports at the end of the job is measured after the builder has been removed, so it
+      # misses the peak during the build, which is what the instance needs to be sized for. This samples it throughout.
+      - name: Start disk usage sampling
+        run: |
+          nohup sh -c 'while true; do df -B1G --output=used "$(docker info -f "{{.DockerRootDir}}")" | tail -1; sleep 5; done' \
+            > "$RUNNER_TEMP/disk-usage.log" 2>&1 &
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
 
@@ -87,3 +94,10 @@ jobs:
         env:
           DOCKER_TAG: ghcr.io/sprinters-sh/${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
         run: docker run --rm $DOCKER_TAG ./config.sh --version
+
+      - name: Report peak disk usage
+        if: always()
+        run: |
+          size=$(df -B1G --output=size "$(docker info -f '{{.DockerRootDir}}')" | tail -1 | tr -d ' ')
+          peak=$(sort -n "$RUNNER_TEMP/disk-usage.log" | tail -1 | tr -d ' ')
+          echo "Peak disk usage: ${peak} GiB of ${size} GiB ($((100 * peak / size))%)"
