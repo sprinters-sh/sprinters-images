@@ -3,7 +3,7 @@
 # Fail-fast
 set -euo pipefail
 
-readonly agent_version=2113
+readonly agent_version=2174
 readonly ARM64=$([ "$(uname -m)" = "aarch64" ] && echo "true")
 if [ "$ARM64" = "true" ]; then
     agent_arch="arm64"
