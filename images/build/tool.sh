@@ -30,7 +30,7 @@ done
 readonly work=$(mktemp -d)
 
 # Changes to these are noise, not part of the tool
-readonly noise=(/artifacts /build /leaves /tmp /var/tmp /var/cache /var/log /root /home/runner /imagegeneration /etc/environment)
+readonly noise=(/artifacts /build /leaves /tmp /var/tmp /var/cache /var/log /run /root /home/runner /imagegeneration /etc/environment)
 
 scan() {
   local prune=()
