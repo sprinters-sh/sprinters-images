@@ -19,8 +19,8 @@ if [ "$MINIMAL" != "true" ]; then
   upstream configure-apt-sources.sh
 fi
 
-# Real cloud images ship a mirror list that apt's acquire failover reads and this script logs; our
-# container uses the stock archive.ubuntu.com sources directly and has no such file.
+# configure-apt-sources.sh points the x64 sources at this mirror list. Minimal images skip it and keep
+# the stock sources, but later scripts still read and log the file, so it must exist.
 sudo touch /etc/apt/apt-mirrors.txt
 
 upstream configure-apt.sh
@@ -78,9 +78,8 @@ else
   sudo -E pwsh -f "${SCRIPTS}/Install-PowerShellAzModules.ps1"
   upstream install-actions-cache.sh
 
-  # Skip tests due to Docker <-> VM differences: configure-apt-sources.sh rewrites the Azure mirror
-  # URL to a mirror+file: reference, but our base image's sources.list points at archive.ubuntu.com
-  # directly and never had that URL, so the rewrite is a no-op and apt still works fine untouched.
+  # Skip tests due to Docker <-> VM differences: they expect the apt sources and mirror list of an
+  # Azure VM, which has an Azure mirror our container lacks.
   skip_tests install-apt-common.sh
   upstream install-apt-common.sh
 fi
